@@ -16,6 +16,12 @@ const logger = winston.createLogger({
   ),
   transports: [
     new WinstonDaily({
+      level: 'http',
+      datePattern: 'YYYY-MM-DD',
+      dirname: `${logDir}/http`,
+
+    }),
+    new WinstonDaily({
       level: 'info',
       datePattern: 'YYYY-MM-DD',
       dirname: logDir,
@@ -43,10 +49,16 @@ if (process.env.NODE_ENV !== 'prod') {
   }));
 } else {
   logger.on('data', ({ level, message, timestamp: time }) => {
-    if (!message.startsWith('[HttpException]')) {
-        sendTGMessage(`[${level}] ${message} (${time})`);
+    if (!message.startsWith('[HttpException]') && level < 2) {
+      sendTGMessage(`[${level}] ${message} (${time})`);
     }
   });
 }
 
-export default logger;
+const httpLogStream = {
+  write: (message: string) => {
+    logger.http(message)
+  }
+}
+
+export { logger, httpLogStream };
