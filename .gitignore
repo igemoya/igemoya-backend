@@ -1,5 +1,7 @@
 node_modules
 package-lock.json
 logs
-**/*.js
+src/**/*.js
 .env
+tsconfig.json
+.DS_Store

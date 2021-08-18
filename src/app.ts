@@ -3,15 +3,24 @@ import mongoose from 'mongoose';
 import morgan from 'morgan';
 
 import config from './config';
-import { httpLogStream } from './resources/logger'
+import { httpLogStream } from './resources/logger';
+import { serviceRouter } from './services'
 
 class App {
     public app : express.Application;
     constructor(){
       this.app = express();
-      this.connectMongoDB();
+      // this.connectMongoDB();
+      this.initializeMiddlewares();
+      this.initializeMorgan();
+      this.initializeRouter();
     }
-
+    private initializeRouter() {
+      this.app.use('/', serviceRouter);
+    }
+    private initializeMiddlewares() {
+      this.app.use(express.json());
+    }
     private connectMongoDB() {
       const { mongoURI } = config;
       const mongooseOption = {
@@ -19,15 +28,15 @@ class App {
         useUnifiedTopology: true,
         useCreateIndex: true,
       };
-      mongoose.connect(mongoURI, mongooseOption)
+      mongoose.connect(mongoURI, mongooseOption);
     }
     private initializeMorgan() {
-      const logFormat = 
+      const morganFormat =
       `HTTP/:http-version :method :remote-addr 
       :url :remote-user :status :res[content-length] 
-      :referrer :user-agent :response-time ms`
+      :referrer :user-agent :response-time ms`;
 
-      this.app.use(morgan(logFormat, { stream: httpLogStream }));
+      this.app.use(morgan(morganFormat, { stream: httpLogStream }));
     }
   }
 export default App;

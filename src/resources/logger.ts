@@ -18,12 +18,6 @@ const logger = winston.createLogger({
     new WinstonDaily({
       level: 'http',
       datePattern: 'YYYY-MM-DD',
-      dirname: `${logDir}/http`,
-
-    }),
-    new WinstonDaily({
-      level: 'info',
-      datePattern: 'YYYY-MM-DD',
       dirname: logDir,
       filename: '%DATE%.log',
       maxFiles: 30,
@@ -57,8 +51,8 @@ if (process.env.NODE_ENV !== 'prod') {
 
 const httpLogStream = {
   write: (message: string) => {
-    logger.http(message)
+    logger.http(message);
   }
-}
+};
 
 export { logger, httpLogStream };
