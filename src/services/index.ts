@@ -14,8 +14,8 @@ export interface Route {
   path: string;
   middlewares?: RequestHandler[];
   handler: RequestHandler;
-  needAuth: boolean; // 인증이 필요한지
-  needPermission: boolean; // 관리자 권한이 필요한지
+  // needAuth: boolean; // 인증이 필요한지
+  // needPermission: boolean; // 관리자 권한이 필요한지
 }
 
 // 임포트 된 서비스 (서비스 디렉토리 명 추가)
