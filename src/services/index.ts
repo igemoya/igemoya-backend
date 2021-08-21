@@ -44,7 +44,7 @@ const wrapper = (asyncFn: any) =>
     }
   );
 
-export const createService = (serviceSchema: ServiceSchema) => serviceSchema;
+export const createService = (serviceSchema: ServiceSchema): ServiceSchema => serviceSchema;
 
 const createRouter = (services: Service[]) => {
   const router = Router();
