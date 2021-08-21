@@ -3,14 +3,14 @@ import mongoose from 'mongoose';
 import morgan from 'morgan';
 
 import config from './config';
-import { httpLogStream } from './resources/logger';
+import { httpLogStream, logger } from './resources/logger';
 import { serviceRouter } from './services'
 
 class App {
     public app : express.Application;
     constructor(){
       this.app = express();
-      // this.connectMongoDB();
+      this.connectMongoDB();
       this.initializeMiddlewares();
       this.initializeMorgan();
       this.initializeRouter();
@@ -28,7 +28,10 @@ class App {
         useUnifiedTopology: true,
         useCreateIndex: true,
       };
-      mongoose.connect(mongoURI, mongooseOption);
+      mongoose.connect(mongoURI, mongooseOption)
+        .then(() => {
+          logger.info(`MongoDB connected`);
+        });
     }
     private initializeMorgan() {
       const morganFormat =
