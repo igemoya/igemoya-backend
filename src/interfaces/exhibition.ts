@@ -1,12 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { coordinate, exhibitionGeoType } from '../types';
 
-export interface Object {
+export interface ObjectIdentity {
     name: string,
     description: string,
     images: string,
 }
-export interface Item {
+export interface ItemIdentity {
     name: string,
     description: string,
     images: string[],
@@ -15,9 +15,9 @@ export interface Item {
         coordinate: coordinate,
     }
 
-    objects?: Object[]
+    objects?: ObjectIdentity[]
 }
-export interface Exhibition {
+export interface ExhibitionIdentity {
     createdUser: ObjectId,
     name: string,
     images: string[],
@@ -26,5 +26,5 @@ export interface Exhibition {
         coordinate: coordinate,
     }
 
-    items?: Item[]
+    items?: ItemIdentity[]
 }
