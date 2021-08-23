@@ -45,5 +45,4 @@ const exhibitionModel = model<ExhibitionIdentity>(
   "Exhibition",
   exhibitionSchema
 );
-
 export { exhibitionSchema, exhibitionModel };
