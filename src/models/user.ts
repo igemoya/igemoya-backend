@@ -1,29 +1,15 @@
-import {
-  createSchema, ExtractDoc, Type, typedModel,
-} from 'ts-mongoose';
-import { ObjectId } from 'mongodb';
-import { UserType, UserTypeValues } from '../types';
+import { model, Schema } from 'mongoose';
+import { UserTypeValues } from '../types';
+import { User } from '../interfaces';
 
 
-const userSchema = createSchema({
-  idx: Type.number({ required: true, unique: true }),
-  username: Type.string({ required: true, unique: true }),
-  name: Type.string({ required: true }),
-  userType: Type.string({ enum: UserTypeValues }),
+const userSchema = new Schema<User>({
+  idx: { type: Number, required: true, unique: true },
+  username: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
+  userType: { type: String, enum: UserTypeValues, required: true },
 }, { timestamps: true });
 
-export type UserDoc = ExtractDoc<typeof userSchema>;
-
-const UserModel = typedModel('User', userSchema, undefined, undefined, {
-  findByIdx(idx: number) {
-    return this.findOne({ idx });
-  },
-  findById(id: ObjectId) {
-    return this.findOne({ _id: id });
-  },
-  findByUserType(userType: UserType[]) {
-    return this.find({ userType: { $in: userType }})
-  },
-});
+const UserModel = model<User>('User', userSchema);
 
 export { userSchema, UserModel };
