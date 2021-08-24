@@ -17,7 +17,7 @@ export const issueToken = async (identity: User) => {
   return token;
 };
 
-export const veriToken = async (token: string) => {
+export const veriToken = (token: string): User => {
   try {
     const { identity }: any = jwt.verify(token, config.jwtSecret as string);
     return identity;
