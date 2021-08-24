@@ -2,9 +2,10 @@ import jwt from "jsonwebtoken";
 import { User } from "../interfaces";
 import config from "../config";
 import { HttpException } from "../exceptions";
+import { logger } from "./logger";
 
 export const issueToken = async (identity: User) => {
-  const token = jwt.sign(
+  const token = await jwt.sign(
     {
       identity,
     },
@@ -17,9 +18,12 @@ export const issueToken = async (identity: User) => {
   return token;
 };
 
-export const veriToken = (token: string): User => {
+export const veriToken = async (token: string): Promise<User> => {
   try {
-    const { identity }: any = jwt.verify(token, config.jwtSecret as string);
+    const { identity }: any = await jwt.verify(
+      token,
+      config.jwtSecret as string
+    );
     return identity;
   } catch (error) {
     if (error.name === "TokenExpiredError") {
