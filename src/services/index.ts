@@ -1,9 +1,13 @@
-import fs from 'fs';
+import fs from "fs";
 import {
-  Router, RequestHandler, Request, Response, NextFunction,
-} from 'express';
-import { join as pathJoin } from 'path';
-import { HTTPMethod } from '../types';
+  Router,
+  RequestHandler,
+  Request,
+  Response,
+  NextFunction,
+} from "express";
+import { join as pathJoin } from "path";
+import { HTTPMethod } from "../types";
 
 interface KeyValue<T> {
   [key: string]: T;
@@ -33,18 +37,17 @@ interface ServiceSchema {
   routes: Route[];
 }
 
-const wrapper = (asyncFn: any) =>
-  (
-    async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        return await asyncFn(req, res, next);
-      } catch (error) {
-        return next(error);
-      }
+const wrapper =
+  (asyncFn: any) => async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      return await asyncFn(req, res, next);
+    } catch (error) {
+      return next(error);
     }
-  );
+  };
 
-export const createService = (serviceSchema: ServiceSchema): ServiceSchema => serviceSchema;
+export const createService = (serviceSchema: ServiceSchema): ServiceSchema =>
+  serviceSchema;
 
 const createRouter = (services: Service[]) => {
   const router = Router();
@@ -53,9 +56,8 @@ const createRouter = (services: Service[]) => {
     service.routes.forEach((route) => {
       router[route.method](
         pathJoin(service.baseURL, route.path),
-        ...(route.middlewares
-          ? route.middlewares.map(wrapper) : []),
-        wrapper(route.handler),
+        ...(route.middlewares ? route.middlewares.map(wrapper) : []),
+        wrapper(route.handler)
       );
     });
   });
@@ -63,13 +65,14 @@ const createRouter = (services: Service[]) => {
   return router;
 };
 
-export const services = fs.readdirSync(__dirname)
-  .filter((s) => !s.startsWith('index'));
+export const services = fs
+  .readdirSync(__dirname)
+  .filter((s) => !s.startsWith("index"));
 
 export const importedServices = services.map((s) => ({
   code: s,
   // eslint-disable-next-line
-  ...(require(`${__dirname}/${s}`).default),
+  ...require(`${__dirname}/${s}`).default,
 }));
 
 export const serviceRouter = createRouter(importedServices);
