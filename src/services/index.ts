@@ -18,8 +18,8 @@ export interface Route {
   path: string;
   middlewares?: RequestHandler[];
   handler: RequestHandler;
-  // needAuth: boolean; // 인증이 필요한지
-  // needPermission: boolean; // 관리자 권한이 필요한지
+  needAuth: boolean;
+  needPermission: boolean;
 }
 
 // 임포트 된 서비스 (서비스 디렉토리 명 추가)
@@ -57,6 +57,7 @@ const createRouter = (services: Service[]) => {
       router[route.method](
         pathJoin(service.baseURL, route.path),
         ...(route.middlewares ? route.middlewares.map(wrapper) : []),
+        // wrapper(checkPermission(service.code, route)),
         wrapper(route.handler)
       );
     });
