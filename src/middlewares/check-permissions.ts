@@ -3,8 +3,8 @@ import { HttpException } from "../exceptions";
 import { Route, services } from "../services";
 
 type ServiceName = typeof services[number];
-const checkPermission =
-  (service: ServiceName, route: Route) =>
+const checkPermissions =
+  (service: ServiceName | undefined, route: Route) =>
   async (req: Request, res: Response, next: NextFunction) => {
     if (!route.needAuth) return next(); // 인증이 필요없는 라우트일 경우 프리패스
     const userToken = req.token;
@@ -34,4 +34,4 @@ const checkPermission =
     return next();
   };
 
-export default checkPermission;
+export default checkPermissions;

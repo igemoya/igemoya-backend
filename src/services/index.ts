@@ -8,6 +8,7 @@ import {
 } from "express";
 import { join as pathJoin } from "path";
 import { HTTPMethod } from "../types";
+import { checkPermissions } from "../middlewares";
 
 interface KeyValue<T> {
   [key: string]: T;
@@ -57,7 +58,7 @@ const createRouter = (services: Service[]) => {
       router[route.method](
         pathJoin(service.baseURL, route.path),
         ...(route.middlewares ? route.middlewares.map(wrapper) : []),
-        // wrapper(checkPermission(service.code, route)),
+        wrapper(checkPermissions(service.code, route)),
         wrapper(route.handler)
       );
     });
@@ -70,7 +71,7 @@ export const services = fs
   .readdirSync(__dirname)
   .filter((s) => !s.startsWith("index"));
 
-export const importedServices = services.map((s) => ({
+export const importedServices = services.map((s: string) => ({
   code: s,
   // eslint-disable-next-line
   ...require(`${__dirname}/${s}`).default,
