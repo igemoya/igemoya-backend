@@ -1,4 +1,5 @@
 import fs from "fs";
+import Joi from "joi";
 import {
   Router,
   RequestHandler,
@@ -8,7 +9,7 @@ import {
 } from "express";
 import { join as pathJoin } from "path";
 import { HTTPMethod } from "../types";
-import { checkPermissions } from "../middlewares";
+import { checkPermissions, validator } from "../middlewares";
 
 interface KeyValue<T> {
   [key: string]: T;
@@ -19,6 +20,7 @@ export interface Route {
   path: string;
   middlewares?: RequestHandler[];
   handler: RequestHandler;
+  validateSchema?: KeyValue<Joi.Schema>;
   needAuth: boolean;
   needPermission: boolean;
 }
@@ -59,9 +61,43 @@ const createRouter = (services: Service[]) => {
         pathJoin(service.baseURL, route.path),
         ...(route.middlewares ? route.middlewares.map(wrapper) : []),
         wrapper(checkPermissions(service.code, route)),
+        ...(route.validateSchema
+          ? [validator(Joi.object(route.validateSchema))]
+          : []),
         wrapper(route.handler)
       );
     });
+  });
+
+  return router;
+};
+
+const createDocsRouter = (services: Service[]) => {
+  const router = Router();
+
+  const schemaMapper = (validateSchema: KeyValue<Joi.AnySchema>) => {
+    const keys = Object.keys(validateSchema);
+    const result: KeyValue<String | undefined> = {};
+    keys.forEach((key) => {
+      result[key] = validateSchema[key].type;
+    });
+    return result;
+  };
+
+  const routeMapper = (service: Service) =>
+    service.routes.map((r) => ({
+      ...r,
+      path: (service.baseURL + r.path).replace(/\/$/, ""),
+      validateSchema: r.validateSchema ? schemaMapper(r.validateSchema) : {},
+    }));
+
+  const mappedServices = services.map((s: Service) => ({
+    ...s,
+    routes: routeMapper(s),
+  }));
+
+  router.get("/", (req, res) => {
+    res.json({ services: mappedServices });
   });
 
   return router;
@@ -78,3 +114,4 @@ export const importedServices = services.map((s: string) => ({
 }));
 
 export const serviceRouter = createRouter(importedServices);
+export const serviceDocsRouter = createDocsRouter(importedServices);
