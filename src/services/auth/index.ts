@@ -9,11 +9,15 @@ export default createService({
       method: "post",
       path: "/register",
       handler: controllers.registerUser,
+      needAuth: false,
+      needPermission: false,
     },
     {
       method: "post",
       path: "/",
       handler: controllers.identifyUser,
+      needAuth: false,
+      needPermission: false,
     },
   ],
 });
