@@ -6,6 +6,7 @@ import morgan from "morgan";
 import config from "./config";
 import { httpLogStream, logger } from "./resources/logger";
 import { serviceRouter } from "./services";
+import { attachIdentity } from "./middlewares";
 
 class App {
   public app: express.Application;
@@ -21,6 +22,7 @@ class App {
   }
   private initializeMiddlewares() {
     this.app.use(express.json());
+    this.app.use(attachIdentity);
     this.app.use(
       bearerToken({
         headerKey: "Bearer",
