@@ -5,7 +5,7 @@ import morgan from "morgan";
 
 import config from "./config";
 import { httpLogStream, logger } from "./resources/logger";
-import { serviceRouter } from "./services";
+import { serviceDocsRouter, serviceRouter } from "./services";
 import { attachIdentity } from "./middlewares";
 
 class App {
@@ -19,6 +19,7 @@ class App {
   }
   private initializeRouter() {
     this.app.use("/", serviceRouter);
+    this.app.use("/docs", serviceDocsRouter);
   }
   private initializeMiddlewares() {
     this.app.use(express.json());
