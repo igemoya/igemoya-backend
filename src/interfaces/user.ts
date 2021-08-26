@@ -1,10 +1,18 @@
+import { ObjectId } from "mongodb";
 import { UserType } from "../types";
 
-export interface User {
+export interface UserBase {
   idx: string;
   username: string;
   name: string;
   userType: UserType;
+}
+
+export interface User extends UserBase {
+  _id: ObjectId;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export interface Account {
