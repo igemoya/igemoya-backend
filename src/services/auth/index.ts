@@ -1,5 +1,7 @@
 import * as controllers from "./controllers";
 import { createService } from "../index";
+import Joi from "joi";
+import { UserTypeValues } from "../../types";
 
 export default createService({
   name: "인증 서비스",
@@ -9,6 +11,14 @@ export default createService({
       method: "post",
       path: "/register",
       handler: controllers.registerUser,
+      validateSchema: {
+        idx: Joi.number().required(),
+        username: Joi.string().required(),
+        name: Joi.string().required(),
+        userType: Joi.string()
+          .valid(...UserTypeValues)
+          .required(),
+      },
       needAuth: false,
       needPermission: false,
     },
