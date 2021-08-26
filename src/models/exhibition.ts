@@ -33,6 +33,7 @@ const itemSchema = new Schema<ItemIdentity>(
 const exhibitionSchema = new Schema<ExhibitionIdentity>({
   createdUser: { type: ObjectId, ref: "User" },
   name: { type: String, required: true },
+  description: { type: String, required: true },
   images: { type: Array, required: true },
   location: {
     coordinate: { type: Array, required: true },
