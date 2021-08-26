@@ -1,16 +1,19 @@
 import { Request, Response } from "express";
 import { HttpException } from "../../exceptions";
 import { UserModel } from "../../models";
-import { User, Account } from "../../interfaces";
+import { User, UserBase, Account } from "../../interfaces";
 import { issueToken } from "../../resources/token";
 
 export const identifyUser = async (req: Request, res: Response) => {
   const account: Account = req.body;
 
   try {
-    const identity: User = (await UserModel.findOne({
+    const identity: User = await UserModel.findOne({
       idx: account.idx,
-    })) as User;
+    });
+    if (!identity) {
+      throw new Error("HttpException");
+    }
     return res.json({ token: await issueToken(identity) });
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -19,15 +22,10 @@ export const identifyUser = async (req: Request, res: Response) => {
 };
 
 export const registerUser = async (req: Request, res: Response) => {
-  const userInfo: User & Account = req.body;
+  const userInfo: UserBase & Account = req.body;
 
   try {
-    const userData = new UserModel({
-      idx: userInfo.idx,
-      username: userInfo.username,
-      name: userInfo.name,
-      userType: userInfo.userType,
-    });
+    const userData = new UserModel(userInfo);
     return res.json({ token: await issueToken(await userData.save()) });
   } catch (e) {
     if (e.name === "HttpException") throw e;
