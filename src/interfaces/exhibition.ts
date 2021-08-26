@@ -18,8 +18,9 @@ export interface ItemIdentity {
   objects?: ObjectIdentity[];
 }
 export interface ExhibitionIdentity {
-  createdUser: ObjectId;
+  createdUser?: ObjectId;
   name: string;
+  description: string;
   images: string[];
   location: {
     type: exhibitionGeoType;
