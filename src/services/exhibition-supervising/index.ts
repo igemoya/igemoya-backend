@@ -43,5 +43,13 @@ export default createService({
       needAuth: true,
       needPermission: true,
     },
+    {
+      method: "post",
+      path: "/object",
+      handler: controllers.registerObjects,
+      middlewares: [attachIdentity],
+      needAuth: true,
+      needPermission: true,
+    },
   ],
 });
