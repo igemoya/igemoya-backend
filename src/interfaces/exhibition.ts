@@ -2,11 +2,15 @@ import { ObjectId } from "mongodb";
 import { coordinate, exhibitionGeoType } from "../types";
 
 export interface ObjectIdentity {
+  exhibitionId?: ObjectId;
+  itemId?: ObjectId;
   name: string;
   description: string;
   images: string;
 }
 export interface ItemIdentity {
+  exhibitionId?: ObjectId;
+  createdUser?: ObjectId;
   name: string;
   description: string;
   images: string[];
@@ -14,8 +18,6 @@ export interface ItemIdentity {
     type: exhibitionGeoType;
     coordinate: coordinate;
   };
-
-  objects?: ObjectIdentity[];
 }
 export interface ExhibitionIdentity {
   createdUser?: ObjectId;
@@ -26,6 +28,4 @@ export interface ExhibitionIdentity {
     type: exhibitionGeoType;
     coordinate: coordinate;
   };
-
-  items?: ItemIdentity[];
 }
