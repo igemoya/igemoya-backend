@@ -77,7 +77,7 @@ export const updateExhibition = async (req: Request, res: Response) => {
 export const deleteExhibition = async (req: Request, res: Response) => {
   try {
     const exhibition = await exhibitionModel.findOne({
-      _id: req.body.exhibitionId,
+      _id: req.params.id,
     });
     if (exhibition.createdUser != req.user._id) {
       //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
@@ -86,7 +86,7 @@ export const deleteExhibition = async (req: Request, res: Response) => {
         "해당 전시를 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    await exhibitionModel.findByIdAndDelete(req.body.exhibitionId);
+    await exhibitionModel.findByIdAndDelete(req.params.id);
     res.sendStatus(HttpStatus.OK);
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -158,7 +158,7 @@ export const updateItem = async (req: Request, res: Response) => {
 export const deleteItem = async (req: Request, res: Response) => {
   try {
     const item = await itemModel.findOne({
-      _id: req.body.itemId,
+      _id: req.params.id,
     });
     if (item.createdUser != req.user._id) {
       //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
@@ -167,7 +167,7 @@ export const deleteItem = async (req: Request, res: Response) => {
         "해당 아이템을 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    await itemModel.findByIdAndDelete(req.body.exhibitionId);
+    await itemModel.findByIdAndDelete(req.params.id);
     res.sendStatus(HttpStatus.OK);
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -198,6 +198,68 @@ export const registerObjects = async (req: Request, res: Response) => {
     res.sendStatus(HttpStatus.Created);
   } catch (e) {
     if (e.name === "HttpException") throw e;
-    throw new HttpException(HttpStatus.NotFound, "전시 조회에 실패했습니다.");
+    throw new HttpException(
+      HttpStatus.NotFound,
+      "오브젝트 등록에 실패했습니다."
+    );
+  }
+};
+
+export const getObject = async (req: Request, res: Response) => {
+  try {
+    const object = await objectModel.findById(req.params.id);
+    return res.json({ object: object });
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(
+      HttpStatus.BadRequest,
+      "오브젝트 조회에 실패했습니다."
+    );
+  }
+};
+
+export const updateObject = async (req: Request, res: Response) => {
+  try {
+    const item = await objectModel.findOne({
+      _id: req.body.exhibitionId,
+    });
+    if (item.createdUser != req.user._id) {
+      //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
+      throw new HttpException(
+        HttpStatus.Unauthorized,
+        "해당 오브젝트를 수정하기 위해 필요한 권한이 없습니다."
+      );
+    }
+    await objectModel.findByIdAndUpdate(req.body.objectId, req.body.object);
+    res.sendStatus(HttpStatus.OK);
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(
+      HttpStatus.BadRequest,
+      "오브젝트 수정에 실패했습니다."
+    );
+  }
+};
+
+export const deleteObject = async (req: Request, res: Response) => {
+  try {
+    const item = await objectModel.findOne({
+      _id: req.params.id,
+    });
+    if (item.createdUser != req.user._id) {
+      //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
+      throw new HttpException(
+        HttpStatus.Unauthorized,
+        "해당 오브젝트를 수정하기 위해 필요한 권한이 없습니다."
+      );
+    }
+    await objectModel.findByIdAndDelete(req.params.idd);
+    res.sendStatus(HttpStatus.OK);
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(
+      HttpStatus.BadRequest,
+      "오브젝트 삭제에 실패했습니다."
+    );
   }
 };

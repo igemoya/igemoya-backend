@@ -9,6 +9,16 @@ export default createService({
   baseURL: "/superviser",
   routes: [
     {
+      method: "get",
+      path: "/my",
+      handler: controllers.myExhibitions,
+      middlewares: [attachIdentity],
+      needAuth: true,
+      needPermission: true,
+    },
+
+    // 3Depth POST
+    {
       method: "post",
       path: "/exhibition",
       handler: controllers.registerExhibition,
@@ -28,38 +38,6 @@ export default createService({
       },
     },
     {
-      method: "get",
-      path: "/exhibition/:id",
-      handler: controllers.getExhibition,
-      middlewares: [attachIdentity],
-      needAuth: true,
-      needPermission: true,
-    },
-    {
-      method: "put",
-      path: "/exhibition",
-      handler: controllers.updateExhibition,
-      middlewares: [attachIdentity],
-      needAuth: true,
-      needPermission: true,
-    },
-    {
-      method: "delete",
-      path: "/exhibition",
-      handler: controllers.deleteExhibition,
-      middlewares: [attachIdentity],
-      needAuth: true,
-      needPermission: true,
-    },
-    {
-      method: "get",
-      path: "/my",
-      handler: controllers.myExhibitions,
-      middlewares: [attachIdentity],
-      needAuth: true,
-      needPermission: true,
-    },
-    {
       method: "post",
       path: "/item",
       handler: controllers.registerItems,
@@ -68,9 +46,45 @@ export default createService({
       needPermission: true,
     },
     {
+      method: "post",
+      path: "/object",
+      handler: controllers.registerObjects,
+      middlewares: [attachIdentity],
+      needAuth: true,
+      needPermission: true,
+    },
+
+    // 3Depth GET
+    {
       method: "get",
-      path: "/item",
+      path: "/exhibition/:id",
+      handler: controllers.getExhibition,
+      middlewares: [attachIdentity],
+      needAuth: true,
+      needPermission: true,
+    },
+    {
+      method: "get",
+      path: "/item/:id",
       handler: controllers.getItem,
+      middlewares: [attachIdentity],
+      needAuth: true,
+      needPermission: true,
+    },
+    {
+      method: "get",
+      path: "/object/:id",
+      handler: controllers.getObject,
+      middlewares: [attachIdentity],
+      needAuth: true,
+      needPermission: true,
+    },
+
+    //3Depth PUT
+    {
+      method: "put",
+      path: "/exhibition",
+      handler: controllers.updateExhibition,
       middlewares: [attachIdentity],
       needAuth: true,
       needPermission: true,
@@ -84,17 +98,35 @@ export default createService({
       needPermission: true,
     },
     {
+      method: "put",
+      path: "/object",
+      handler: controllers.updateObject,
+      middlewares: [attachIdentity],
+      needAuth: true,
+      needPermission: true,
+    },
+
+    //3Depth Delete
+    {
       method: "delete",
-      path: "/item",
+      path: "/exhibition/:id",
+      handler: controllers.deleteExhibition,
+      middlewares: [attachIdentity],
+      needAuth: true,
+      needPermission: true,
+    },
+    {
+      method: "delete",
+      path: "/item/:id",
       handler: controllers.deleteItem,
       middlewares: [attachIdentity],
       needAuth: true,
       needPermission: true,
     },
     {
-      method: "post",
-      path: "/object",
-      handler: controllers.registerObjects,
+      method: "delete",
+      path: "/object/:id",
+      handler: controllers.deleteObject,
       middlewares: [attachIdentity],
       needAuth: true,
       needPermission: true,
