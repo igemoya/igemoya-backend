@@ -119,6 +119,65 @@ export const registerItems = async (req: Request, res: Response) => {
   }
 };
 
+export const getItem = async (req: Request, res: Response) => {
+  try {
+    const item = await itemModel.findById(req.params.id);
+    return res.json({ item: item });
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(
+      HttpStatus.BadRequest,
+      "아이템 조회에 실패했습니다."
+    );
+  }
+};
+
+export const updateItem = async (req: Request, res: Response) => {
+  try {
+    const item = await itemModel.findOne({
+      _id: req.body.exhibitionId,
+    });
+    if (item.createdUser != req.user._id) {
+      //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
+      throw new HttpException(
+        HttpStatus.Unauthorized,
+        "해당 아이템을 수정하기 위해 필요한 권한이 없습니다."
+      );
+    }
+    await itemModel.findByIdAndUpdate(req.body.itemId, req.body.item);
+    res.sendStatus(HttpStatus.OK);
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(
+      HttpStatus.BadRequest,
+      "아이템 수정에 실패했습니다."
+    );
+  }
+};
+
+export const deleteItem = async (req: Request, res: Response) => {
+  try {
+    const item = await itemModel.findOne({
+      _id: req.body.itemId,
+    });
+    if (item.createdUser != req.user._id) {
+      //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
+      throw new HttpException(
+        HttpStatus.Unauthorized,
+        "해당 아이템을 수정하기 위해 필요한 권한이 없습니다."
+      );
+    }
+    await itemModel.findByIdAndDelete(req.body.exhibitionId);
+    res.sendStatus(HttpStatus.OK);
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(
+      HttpStatus.BadRequest,
+      "아이템 삭제에 실패했습니다."
+    );
+  }
+};
+
 export const registerObjects = async (req: Request, res: Response) => {
   try {
     const objects: ObjectIdentity[] = req.body.objects;
