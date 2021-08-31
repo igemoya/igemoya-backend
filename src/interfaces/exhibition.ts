@@ -3,6 +3,7 @@ import { coordinate, exhibitionGeoType } from "../types";
 
 export interface ObjectIdentity {
   exhibitionId?: ObjectId;
+  createdUser?: ObjectId;
   itemId?: ObjectId;
   name: string;
   description: string;
