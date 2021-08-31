@@ -37,6 +37,7 @@ const logger = winston.createLogger({
 });
 
 if (process.env.NODE_ENV !== undefined) {
+  //텔그 봇 문제있어서 죽임 process.env.NODE_ENV !== dev
   logger.add(
     new winston.transports.Console({
       format: winston.format.combine(
