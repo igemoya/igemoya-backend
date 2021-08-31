@@ -35,6 +35,7 @@ class App {
     const { mongoURI } = config;
     const mongooseOption = {
       useNewUrlParser: true,
+      useFindAndModify: false,
       useUnifiedTopology: true,
       useCreateIndex: true,
     };
