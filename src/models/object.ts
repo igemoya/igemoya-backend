@@ -10,6 +10,7 @@ import {
 const objectSchema = new Schema<ObjectIdentity>(
   {
     itemId: { type: ObjectId, ref: "Item" },
+    createdUser: { type: ObjectId, ref: "User" },
     name: { type: String, required: true },
     description: { type: String, required: true },
     images: { type: Array, required: true },
