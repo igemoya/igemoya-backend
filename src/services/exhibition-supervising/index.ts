@@ -54,32 +54,6 @@ export default createService({
       needPermission: true,
     },
 
-    // 3Depth GET
-    {
-      method: "get",
-      path: "/exhibition/:id",
-      handler: controllers.getExhibition,
-      middlewares: [attachIdentity],
-      needAuth: true,
-      needPermission: true,
-    },
-    {
-      method: "get",
-      path: "/item/:id",
-      handler: controllers.getItem,
-      middlewares: [attachIdentity],
-      needAuth: true,
-      needPermission: true,
-    },
-    {
-      method: "get",
-      path: "/object/:id",
-      handler: controllers.getObject,
-      middlewares: [attachIdentity],
-      needAuth: true,
-      needPermission: true,
-    },
-
     //3Depth PUT
     {
       method: "put",

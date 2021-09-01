@@ -41,16 +41,6 @@ export const registerExhibition = async (req: Request, res: Response) => {
   }
 };
 
-export const getExhibition = async (req: Request, res: Response) => {
-  try {
-    const exhibition = await exhibitionModel.findById(req.params.id);
-    return res.json({ exhibition: exhibition });
-  } catch (e) {
-    if (e.name === "HttpException") throw e;
-    throw new HttpException(HttpStatus.BadRequest, "전시 조회에 실패했습니다.");
-  }
-};
-
 export const updateExhibition = async (req: Request, res: Response) => {
   try {
     const exhibition = await exhibitionModel.findOne({
@@ -116,19 +106,6 @@ export const registerItems = async (req: Request, res: Response) => {
   } catch (e) {
     if (e.name === "HttpException") throw e;
     throw new HttpException(HttpStatus.BadRequest, "전시 조회에 실패했습니다.");
-  }
-};
-
-export const getItem = async (req: Request, res: Response) => {
-  try {
-    const item = await itemModel.findById(req.params.id);
-    return res.json({ item: item });
-  } catch (e) {
-    if (e.name === "HttpException") throw e;
-    throw new HttpException(
-      HttpStatus.BadRequest,
-      "아이템 조회에 실패했습니다."
-    );
   }
 };
 
@@ -201,19 +178,6 @@ export const registerObjects = async (req: Request, res: Response) => {
     throw new HttpException(
       HttpStatus.NotFound,
       "오브젝트 등록에 실패했습니다."
-    );
-  }
-};
-
-export const getObject = async (req: Request, res: Response) => {
-  try {
-    const object = await objectModel.findById(req.params.id);
-    return res.json({ object: object });
-  } catch (e) {
-    if (e.name === "HttpException") throw e;
-    throw new HttpException(
-      HttpStatus.BadRequest,
-      "오브젝트 조회에 실패했습니다."
     );
   }
 };
