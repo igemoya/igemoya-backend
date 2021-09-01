@@ -185,7 +185,7 @@ export const registerObjects = async (req: Request, res: Response) => {
 export const updateObject = async (req: Request, res: Response) => {
   try {
     const item = await objectModel.findOne({
-      _id: req.body.exhibitionId,
+      _id: req.body.objectId,
     });
     if (item.createdUser != req.user._id) {
       //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
