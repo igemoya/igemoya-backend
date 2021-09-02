@@ -3,15 +3,18 @@ import { User } from "../interfaces";
 import config from "../config";
 import { HttpException } from "../exceptions";
 
-export const issueToken = async (identity: User) => {
+export const issueToken = async <Type>(
+  payload: Type,
+  expires: number | string = "1w" //number인 경우 단위는 second, string은 days, w, h, m, d 등등
+) => {
   const token = await jwt.sign(
     {
-      identity,
+      payload,
     },
     config.jwtSecret as string,
     {
       algorithm: "HS512",
-      expiresIn: "1w",
+      expiresIn: expires,
     }
   );
   return token;
