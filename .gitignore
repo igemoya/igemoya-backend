@@ -1,5 +1,4 @@
-node_modules
-package-lock.json
+.yarn
 logs
 src/**/*.js
 .env

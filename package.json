@@ -1,7 +1,6 @@
 {
-  "name": "igemoya-backend",
-  "version": "1.0.0",
-  "description": "",
+  "name": "backend",
+  "packageManager": "yarn@3.0.2",
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
@@ -31,6 +30,7 @@
     "node-telegram-bot-api": "^0.54.0",
     "ts-node": "^10.2.1",
     "tsc-watch": "^4.4.0",
+    "typescript": "^4.4.2",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.5"
   },
