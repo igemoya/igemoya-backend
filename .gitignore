@@ -2,6 +2,7 @@
 logs
 src/**/*.js
 .env
+yarn.lock
 tsconfig.json
 .DS_Store
 
