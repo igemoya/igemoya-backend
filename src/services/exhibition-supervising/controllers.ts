@@ -12,18 +12,6 @@ import { ObjectId } from "mongodb";
 import { HttpStatus } from "../../types";
 import { Http } from "winston/lib/winston/transports";
 
-export const myExhibitions = async (req: Request, res: Response) => {
-  try {
-    const exhibitions: ExhibitionIdentity[] = await exhibitionModel.find({
-      createdUser: req.user._id,
-    });
-    return res.json({ exhibitions: exhibitions });
-  } catch (e) {
-    if (e.name === "HttpException") throw e;
-    throw new HttpException(HttpStatus.BadRequest, "전시 조회에 실패했습니다.");
-  }
-};
-
 export const registerExhibition = async (req: Request, res: Response) => {
   try {
     const exhibition: ExhibitionIdentity = req.body;
@@ -41,6 +29,18 @@ export const registerExhibition = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllExhibitions = async (req: Request, res: Response) => {
+  try {
+    const exhibitions: ExhibitionIdentity[] = await exhibitionModel.find({
+      createdUser: req.user._id,
+    });
+    return res.json({ exhibitions: exhibitions });
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(HttpStatus.BadRequest, "전시 조회에 실패했습니다.");
+  }
+};
+
 export const updateExhibition = async (req: Request, res: Response) => {
   try {
     const exhibition = await exhibitionModel.findOne({
@@ -53,8 +53,8 @@ export const updateExhibition = async (req: Request, res: Response) => {
         "해당 전시를 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    await exhibitionModel.findByIdAndUpdate(
-      req.body.exhibitionId,
+    await exhibitionModel.updateOne(
+      { _id: req.body.exhibitionId },
       req.body.exhibition
     );
     res.sendStatus(HttpStatus.OK);
@@ -76,7 +76,7 @@ export const deleteExhibition = async (req: Request, res: Response) => {
         "해당 전시를 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    await exhibitionModel.findByIdAndDelete(req.params.id);
+
     res.sendStatus(HttpStatus.OK);
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -109,6 +109,28 @@ export const registerItems = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllItems = async (req: Request, res: Response) => {
+  try {
+    const items: ItemIdentity[] = await itemModel.aggregate([
+      {
+        $match: {
+          $and: [
+            { createdUser: new ObjectId(req.user._id) },
+            { exhibitionId: new ObjectId(req.params.id) },
+          ],
+        },
+      },
+    ]);
+    return res.json({ items: items });
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(
+      HttpStatus.BadRequest,
+      "아이템 조회에 실패했습니다."
+    );
+  }
+};
+
 export const updateItem = async (req: Request, res: Response) => {
   try {
     const item = await itemModel.findOne({
@@ -121,7 +143,7 @@ export const updateItem = async (req: Request, res: Response) => {
         "해당 아이템을 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    await itemModel.findByIdAndUpdate(req.body.itemId, req.body.item);
+    await itemModel.updateOne({ _id: req.body.itemId }, req.body.item);
     res.sendStatus(HttpStatus.OK);
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -144,7 +166,7 @@ export const deleteItem = async (req: Request, res: Response) => {
         "해당 아이템을 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    await itemModel.findByIdAndDelete(req.params.id);
+    await itemModel.deleteOne({ _id: req.params.id });
     res.sendStatus(HttpStatus.OK);
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -170,6 +192,7 @@ export const registerObjects = async (req: Request, res: Response) => {
     }
     objects.forEach((v: ObjectIdentity) => {
       v.itemId = req.body.itemId;
+      v.createdUser = req.user._id;
       new objectModel(v).save();
     });
     res.sendStatus(HttpStatus.Created);
@@ -178,6 +201,28 @@ export const registerObjects = async (req: Request, res: Response) => {
     throw new HttpException(
       HttpStatus.NotFound,
       "오브젝트 등록에 실패했습니다."
+    );
+  }
+};
+
+export const getAllObjects = async (req: Request, res: Response) => {
+  try {
+    const objects: ObjectIdentity[] = await objectModel.aggregate([
+      {
+        $match: {
+          $and: [
+            { createdUser: new ObjectId(req.user._id) },
+            { itemId: new ObjectId(req.params.id) },
+          ],
+        },
+      },
+    ]);
+    return res.json({ objects: objects });
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(
+      HttpStatus.BadRequest,
+      "오브젝트 조회에 실패했습니다."
     );
   }
 };
@@ -194,7 +239,7 @@ export const updateObject = async (req: Request, res: Response) => {
         "해당 오브젝트를 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    await objectModel.findByIdAndUpdate(req.body.objectId, req.body.object);
+    await objectModel.updateOne({ _id: req.body.objectId }, req.body.object);
     res.sendStatus(HttpStatus.OK);
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -217,7 +262,7 @@ export const deleteObject = async (req: Request, res: Response) => {
         "해당 오브젝트를 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    await objectModel.findByIdAndDelete(req.params.idd);
+    await objectModel.deleteOne({ _id: req.params.id });
     res.sendStatus(HttpStatus.OK);
   } catch (e) {
     if (e.name === "HttpException") throw e;

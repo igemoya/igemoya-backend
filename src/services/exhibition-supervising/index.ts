@@ -10,8 +10,24 @@ export default createService({
   routes: [
     {
       method: "get",
-      path: "/my",
-      handler: controllers.myExhibitions,
+      path: "/exhibition",
+      handler: controllers.getAllExhibitions,
+      middlewares: [attachIdentity],
+      needAuth: true,
+      needPermission: true,
+    },
+    {
+      method: "get",
+      path: "/item/:id",
+      handler: controllers.getAllItems,
+      middlewares: [attachIdentity],
+      needAuth: true,
+      needPermission: true,
+    },
+    {
+      method: "get",
+      path: "/object/:id",
+      handler: controllers.getAllObjects,
       middlewares: [attachIdentity],
       needAuth: true,
       needPermission: true,
