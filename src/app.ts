@@ -40,6 +40,7 @@ class App {
       useCreateIndex: true,
     };
     mongoose.connect(mongoURI, mongooseOption).then(() => {
+      //mongoose@^5.13.5에서 정상작동
       logger.info(`MongoDB connected`);
     });
   }
