@@ -7,10 +7,8 @@ import {
   ObjectIdentity,
   User,
 } from "../../interfaces";
-import { logger } from "../../resources/logger";
 import { ObjectId } from "mongodb";
 import { HttpStatus } from "../../types";
-import { Http } from "winston/lib/winston/transports";
 
 export const registerExhibition = async (req: Request, res: Response) => {
   try {
@@ -26,61 +24,6 @@ export const registerExhibition = async (req: Request, res: Response) => {
   } catch (e) {
     if (e.name === "HttpException") throw e;
     throw new HttpException(HttpStatus.BadRequest, "전시 등록에 실패했습니다.");
-  }
-};
-
-export const getAllExhibitions = async (req: Request, res: Response) => {
-  try {
-    const exhibitions: ExhibitionIdentity[] = await exhibitionModel.find({
-      createdUser: req.user._id,
-    });
-    return res.json({ exhibitions: exhibitions });
-  } catch (e) {
-    if (e.name === "HttpException") throw e;
-    throw new HttpException(HttpStatus.BadRequest, "전시 조회에 실패했습니다.");
-  }
-};
-
-export const updateExhibition = async (req: Request, res: Response) => {
-  try {
-    const exhibition = await exhibitionModel.findOne({
-      _id: req.body.exhibitionId,
-    });
-    if (exhibition.createdUser != req.user._id) {
-      //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
-      throw new HttpException(
-        HttpStatus.Unauthorized,
-        "해당 전시를 수정하기 위해 필요한 권한이 없습니다."
-      );
-    }
-    await exhibitionModel.updateOne(
-      { _id: req.body.exhibitionId },
-      req.body.exhibition
-    );
-    res.sendStatus(HttpStatus.OK);
-  } catch (e) {
-    if (e.name === "HttpException") throw e;
-    throw new HttpException(HttpStatus.BadRequest, "전시 수정에 실패했습니다.");
-  }
-};
-
-export const deleteExhibition = async (req: Request, res: Response) => {
-  try {
-    const exhibition = await exhibitionModel.findOne({
-      _id: req.params.id,
-    });
-    if (exhibition.createdUser != req.user._id) {
-      //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
-      throw new HttpException(
-        HttpStatus.Unauthorized,
-        "해당 전시를 수정하기 위해 필요한 권한이 없습니다."
-      );
-    }
-
-    res.sendStatus(HttpStatus.OK);
-  } catch (e) {
-    if (e.name === "HttpException") throw e;
-    throw new HttpException(HttpStatus.BadRequest, "전시 삭제에 실패했습니다.");
   }
 };
 
@@ -106,74 +49,6 @@ export const registerItems = async (req: Request, res: Response) => {
   } catch (e) {
     if (e.name === "HttpException") throw e;
     throw new HttpException(HttpStatus.BadRequest, "전시 조회에 실패했습니다.");
-  }
-};
-
-export const getAllItems = async (req: Request, res: Response) => {
-  try {
-    const items: ItemIdentity[] = await itemModel.aggregate([
-      {
-        $match: {
-          $and: [
-            { createdUser: new ObjectId(req.user._id) },
-            { exhibitionId: new ObjectId(req.params.id) },
-          ],
-        },
-      },
-    ]);
-    return res.json({ items: items });
-  } catch (e) {
-    if (e.name === "HttpException") throw e;
-    throw new HttpException(
-      HttpStatus.BadRequest,
-      "아이템 조회에 실패했습니다."
-    );
-  }
-};
-
-export const updateItem = async (req: Request, res: Response) => {
-  try {
-    const item = await itemModel.findOne({
-      _id: req.body.exhibitionId,
-    });
-    if (item.createdUser != req.user._id) {
-      //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
-      throw new HttpException(
-        HttpStatus.Unauthorized,
-        "해당 아이템을 수정하기 위해 필요한 권한이 없습니다."
-      );
-    }
-    await itemModel.updateOne({ _id: req.body.itemId }, req.body.item);
-    res.sendStatus(HttpStatus.OK);
-  } catch (e) {
-    if (e.name === "HttpException") throw e;
-    throw new HttpException(
-      HttpStatus.BadRequest,
-      "아이템 수정에 실패했습니다."
-    );
-  }
-};
-
-export const deleteItem = async (req: Request, res: Response) => {
-  try {
-    const item = await itemModel.findOne({
-      _id: req.params.id,
-    });
-    if (item.createdUser != req.user._id) {
-      //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
-      throw new HttpException(
-        HttpStatus.Unauthorized,
-        "해당 아이템을 수정하기 위해 필요한 권한이 없습니다."
-      );
-    }
-    await itemModel.deleteOne({ _id: req.params.id });
-    res.sendStatus(HttpStatus.OK);
-  } catch (e) {
-    if (e.name === "HttpException") throw e;
-    throw new HttpException(
-      HttpStatus.BadRequest,
-      "아이템 삭제에 실패했습니다."
-    );
   }
 };
 
@@ -205,24 +80,48 @@ export const registerObjects = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllObjects = async (req: Request, res: Response) => {
+export const updateExhibition = async (req: Request, res: Response) => {
   try {
-    const objects: ObjectIdentity[] = await objectModel.aggregate([
-      {
-        $match: {
-          $and: [
-            { createdUser: new ObjectId(req.user._id) },
-            { itemId: new ObjectId(req.params.id) },
-          ],
-        },
-      },
-    ]);
-    return res.json({ objects: objects });
+    const exhibition = await exhibitionModel.findOne({
+      _id: req.body.exhibitionId,
+    });
+    if (exhibition.createdUser != req.user._id) {
+      //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
+      throw new HttpException(
+        HttpStatus.Unauthorized,
+        "해당 전시를 수정하기 위해 필요한 권한이 없습니다."
+      );
+    }
+    await exhibitionModel.updateOne(
+      { _id: req.body.exhibitionId },
+      req.body.exhibition
+    );
+    res.sendStatus(HttpStatus.OK);
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(HttpStatus.BadRequest, "전시 수정에 실패했습니다.");
+  }
+};
+
+export const updateItem = async (req: Request, res: Response) => {
+  try {
+    const item = await itemModel.findOne({
+      _id: req.body.exhibitionId,
+    });
+    if (item.createdUser != req.user._id) {
+      //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
+      throw new HttpException(
+        HttpStatus.Unauthorized,
+        "해당 아이템을 수정하기 위해 필요한 권한이 없습니다."
+      );
+    }
+    await itemModel.updateOne({ _id: req.body.itemId }, req.body.item);
+    res.sendStatus(HttpStatus.OK);
   } catch (e) {
     if (e.name === "HttpException") throw e;
     throw new HttpException(
       HttpStatus.BadRequest,
-      "오브젝트 조회에 실패했습니다."
+      "아이템 수정에 실패했습니다."
     );
   }
 };
@@ -246,6 +145,105 @@ export const updateObject = async (req: Request, res: Response) => {
     throw new HttpException(
       HttpStatus.BadRequest,
       "오브젝트 수정에 실패했습니다."
+    );
+  }
+};
+
+export const getAllExhibitions = async (req: Request, res: Response) => {
+  try {
+    const exhibitions: ExhibitionIdentity[] = await exhibitionModel.find({
+      createdUser: req.user._id,
+    });
+    return res.json({ exhibitions: exhibitions });
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(HttpStatus.BadRequest, "전시 조회에 실패했습니다.");
+  }
+};
+
+export const getAllItems = async (req: Request, res: Response) => {
+  try {
+    const items: ItemIdentity[] = await itemModel.aggregate([
+      {
+        $match: {
+          $and: [
+            { createdUser: new ObjectId(req.user._id) },
+            { exhibitionId: new ObjectId(req.params.id) },
+          ],
+        },
+      },
+    ]);
+    return res.json({ items: items });
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(
+      HttpStatus.BadRequest,
+      "아이템 조회에 실패했습니다."
+    );
+  }
+};
+
+export const getAllObjects = async (req: Request, res: Response) => {
+  try {
+    const objects: ObjectIdentity[] = await objectModel.aggregate([
+      {
+        $match: {
+          $and: [
+            { createdUser: new ObjectId(req.user._id) },
+            { itemId: new ObjectId(req.params.id) },
+          ],
+        },
+      },
+    ]);
+    return res.json({ objects: objects });
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(
+      HttpStatus.BadRequest,
+      "오브젝트 조회에 실패했습니다."
+    );
+  }
+};
+
+export const deleteExhibition = async (req: Request, res: Response) => {
+  try {
+    const exhibition = await exhibitionModel.findOne({
+      _id: req.params.id,
+    });
+    if (exhibition.createdUser != req.user._id) {
+      //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
+      throw new HttpException(
+        HttpStatus.Unauthorized,
+        "해당 전시를 수정하기 위해 필요한 권한이 없습니다."
+      );
+    }
+
+    res.sendStatus(HttpStatus.OK);
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(HttpStatus.BadRequest, "전시 삭제에 실패했습니다.");
+  }
+};
+
+export const deleteItem = async (req: Request, res: Response) => {
+  try {
+    const item = await itemModel.findOne({
+      _id: req.params.id,
+    });
+    if (item.createdUser != req.user._id) {
+      //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
+      throw new HttpException(
+        HttpStatus.Unauthorized,
+        "해당 아이템을 수정하기 위해 필요한 권한이 없습니다."
+      );
+    }
+    await itemModel.deleteOne({ _id: req.params.id });
+    res.sendStatus(HttpStatus.OK);
+  } catch (e) {
+    if (e.name === "HttpException") throw e;
+    throw new HttpException(
+      HttpStatus.BadRequest,
+      "아이템 삭제에 실패했습니다."
     );
   }
 };
