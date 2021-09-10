@@ -41,17 +41,6 @@ export default createService({
       middlewares: [attachIdentity],
       needAuth: true,
       needPermission: true,
-      validateSchema: {
-        name: Joi.string().required(),
-        description: Joi.string().required(),
-        images: Joi.array().items(Joi.string()).required(),
-        location: Joi.object({
-          type: Joi.string()
-            .valid(...exhibitionGeoTypeValues)
-            .required(),
-          coordinate: Joi.array().items(Joi.number()).required(),
-        }),
-      },
     },
     {
       method: "post",

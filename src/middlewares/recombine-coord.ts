@@ -1,4 +1,3 @@
-import { kMaxLength } from "buffer";
 import { NextFunction, Request, Response } from "express";
 import { geoJSON } from "../interfaces";
 import { logger } from "../resources/logger";
