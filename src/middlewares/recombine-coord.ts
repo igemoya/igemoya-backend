@@ -1,3 +1,4 @@
+import { kMaxLength } from "buffer";
 import { NextFunction, Request, Response } from "express";
 import { geoJSON } from "../interfaces";
 import { logger } from "../resources/logger";
@@ -8,11 +9,17 @@ const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
     return next();
   }
   if (!(req.body.location.type == "Point")) {
-    //body.location의 type이 Point가 아닐 경우 좌표만 그대로 옮김
+    //body.location의 type이 Poligon일 경우 좌표 swap 후 옮김
+    const coordinates = req.body.location.coordinate;
+
+    for (let i = 0; i < coordinates.length; i++) {
+      coordinates[i] = [coordinates[i][1], coordinates[i][0]];
+    }
+
     const geojson: geoJSON = {
       location: {
         type: "Polygon",
-        coordinate: req.body.location.coordinate,
+        coordinate: coordinates,
       },
     };
     req.geoJSON = geojson;
