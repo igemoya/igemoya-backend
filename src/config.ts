@@ -9,4 +9,5 @@ export default {
   telegramChatID: process.env.TELEGRAM_CHATID!,
   mongoURI: process.env.MONGO_URI!,
   jwtSecret: process.env.JWT_SECRET!,
+  logExpires: process.env.LOG_EXPIRES!,
 };
