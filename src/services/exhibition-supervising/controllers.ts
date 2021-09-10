@@ -14,10 +14,6 @@ export const registerExhibition = async (req: Request, res: Response) => {
   try {
     const exhibition: ExhibitionIdentity = req.body;
     exhibition.createdUser = req.user._id;
-    exhibition.location.coordinate = [
-      exhibition.location.coordinate[1],
-      exhibition.location.coordinate[0],
-    ];
     const newExhibition = new exhibitionModel(exhibition);
     await newExhibition.save();
     return res.sendStatus(HttpStatus.Created);
@@ -29,7 +25,7 @@ export const registerExhibition = async (req: Request, res: Response) => {
 
 export const registerItems = async (req: Request, res: Response) => {
   try {
-    const items: ItemIdentity[] = req.body.items;
+    const item: ItemIdentity = req.body;
     const exhibition = await exhibitionModel.findOne({
       _id: req.body.exhibitionId,
     });
@@ -40,11 +36,8 @@ export const registerItems = async (req: Request, res: Response) => {
         "해당 전시를 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    items.forEach((v: ItemIdentity) => {
-      v.exhibitionId = req.body.exhibitionId;
-      v.createdUser = exhibition.createdUser;
-      new itemModel(v).save();
-    });
+    item.createdUser = exhibition.createdUser;
+    new itemModel(item).save();
     res.sendStatus(HttpStatus.Created);
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -54,7 +47,7 @@ export const registerItems = async (req: Request, res: Response) => {
 
 export const registerObjects = async (req: Request, res: Response) => {
   try {
-    const objects: ObjectIdentity[] = req.body.objects;
+    const object: ObjectIdentity = req.body;
     const item = await itemModel.findOne({
       _id: req.body.itemId,
     });
@@ -65,11 +58,8 @@ export const registerObjects = async (req: Request, res: Response) => {
         "해당 전시를 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    objects.forEach((v: ObjectIdentity) => {
-      v.itemId = req.body.itemId;
-      v.createdUser = req.user._id;
-      new objectModel(v).save();
-    });
+    object.createdUser = req.user._id;
+    new objectModel(object).save();
     res.sendStatus(HttpStatus.Created);
   } catch (e) {
     if (e.name === "HttpException") throw e;
