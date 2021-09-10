@@ -11,12 +11,12 @@ export interface imgMeta {
 }
 
 export interface imgserverMeta {
-  //imgToken의 데이터
+  //imgToken Payload
   imgId: ObjectId;
   filename: string;
 }
 
-export interface imgIdentity {
+export interface ImgIdentity {
   //DB Schema
   uploader: ObjectId;
   filename: string;
@@ -24,4 +24,5 @@ export interface imgIdentity {
     type: exhibitionGeoType;
     coordinate: coordinate;
   };
+  createdAt?: Date;
 }
