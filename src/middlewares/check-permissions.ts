@@ -18,11 +18,6 @@ const checkPermissions =
       );
     }
 
-    // 학생만 접근 가능한 라우트인데 교사가 접근한 경우
-    // if (req.user?.userType !== "Audience" && route.studentOnly) {
-    //   throw new HttpException(403, "학생만 접근 가능한 라우트입니다.");
-    // }
-
     // 관리자 권한이 필요한 라우트에 접근하는데 권한이 없는 경우
     if (req.user?.userType !== "Manager" && route.needPermission) {
       throw new HttpException(
