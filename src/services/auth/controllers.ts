@@ -14,7 +14,7 @@ export const identifyUser = async (req: Request, res: Response) => {
     if (!identity) {
       throw new Error("HttpException");
     }
-    return res.json({ token: await issueToken<User>(identity) });
+    return res.json({ token: await issueToken(identity) });
   } catch (e) {
     if (e.name === "HttpException") throw e;
     throw new HttpException(401, "인증에 실패했습니다.");
@@ -26,7 +26,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
   try {
     const userData = new UserModel(userInfo);
-    return res.json({ token: await issueToken<User>(await userData.save()) });
+    return res.json({ token: await issueToken(await userData.save()) });
   } catch (e) {
     if (e.name === "HttpException") throw e;
     throw new HttpException(401, "회원가입에 실패했습니다.");

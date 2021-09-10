@@ -1,11 +1,7 @@
 import { Schema, model } from "mongoose";
 import { ObjectId } from "mongodb";
 import { exhibitionGeoTypeValues } from "../types";
-import {
-  ObjectIdentity,
-  ItemIdentity,
-  ExhibitionIdentity,
-} from "../interfaces";
+import { ExhibitionIdentity } from "../interfaces";
 
 const exhibitionSchema = new Schema<ExhibitionIdentity>({
   createdUser: { type: ObjectId, ref: "User" },
