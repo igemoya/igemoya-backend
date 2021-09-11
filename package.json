@@ -1,13 +1,11 @@
 {
   "name": "backend",
-  "packageManager": "yarn@3.0.2",
   "main": "src/index.js",
   "workspaces": [
     "client"
   ],
   "engines": {
-    "node": "16.x",
-    "yarn": "3.0.2"
+    "node": "16.x"
   },
   "private": true,
   "scripts": {
