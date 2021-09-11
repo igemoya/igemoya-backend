@@ -10,9 +10,8 @@
   },
   "private": true,
   "scripts": {
-    "build": "tsc",
     "dev": "cross-env NODE_ENV=develop nodemon --watch 'src/**/*.ts' --exec 'ts-node' --files src/index.ts",
-    "prod": "cross-env NODE_ENV=prod node src/index.js"
+    "prod": "cross-env NODE_ENV=prod 'ts-node' --files src/index.ts"
   },
   "devDependencies": {
     "@types/node": "^16.7.13",
