@@ -5,6 +5,10 @@
   "workspaces": [
     "client"
   ],
+  "engines": {
+    "node": "16.x",
+    "yarn": "3.0.2"
+  },
   "private": true,
   "scripts": {
     "build": "tsc",
