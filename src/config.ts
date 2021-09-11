@@ -4,7 +4,7 @@ const env = dotenv.config();
 if (!env) throw new Error(".env file not exist");
 
 export default {
-  prodPort: process.env.SERVER_PORT_PROD!,
+  prodPort: process.env.PORT!, //HEROKU 제공 enviornment
   devPort: process.env.SERVER_PORT_DEV!,
   telegramToken: process.env.TELEGRAM_TOKEN!,
   telegramChatID: process.env.TELEGRAM_CHATID!,
