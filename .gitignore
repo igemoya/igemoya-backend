@@ -1,4 +1,10 @@
-.yarn
+.yarn/*
+!.yarn/cache
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
 logs
 src/**/*.js
 .env
