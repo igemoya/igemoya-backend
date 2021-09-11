@@ -6,7 +6,10 @@ import { logger } from "./resources/logger";
 dotenv.config();
 
 const { app } = new App();
-const port: number = parseInt(config.port) || 5000;
+const port: number =
+  process.env.NODE_ENV == "prod"
+    ? parseInt(config.prodPort)
+    : parseInt(config.devPort);
 
 app.listen(port, () => {
   logger.info(`Server listening on ${port}`);
