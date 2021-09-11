@@ -2,7 +2,8 @@ import express from "express";
 import bearerToken from "express-bearer-token";
 import mongoose from "mongoose";
 import morgan from "morgan";
-
+import favicon from "serve-favicon";
+import path from "path";
 import config from "./config";
 import { httpLogStream, logger } from "./resources/logger";
 import { serviceDocsRouter, serviceRouter } from "./services";
@@ -23,6 +24,7 @@ class App {
   }
   private initializeMiddlewares() {
     this.app.use(express.json());
+    this.app.use(favicon(path.join(__dirname, "favicon", "favicon.ico")));
     this.app.use(attachIdentity);
     this.app.use(
       bearerToken({
