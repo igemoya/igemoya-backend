@@ -14,4 +14,5 @@ __exportStar(require("./exhibition"), exports);
 __exportStar(require("./user"), exports);
 __exportStar(require("./img-metadata"), exports);
 __exportStar(require("./location"), exports);
+__exportStar(require("./kakaoAuth"), exports);
 //# sourceMappingURL=index.js.map
