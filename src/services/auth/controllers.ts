@@ -11,7 +11,7 @@ import {
 } from "../../interfaces";
 import { issueToken } from "../../resources/token";
 import config from "../../config";
-import auth from ".";
+import { logger } from "../../resources/logger";
 
 const getKakaoToken = async (authCode: string): Promise<object> => {
   try {
@@ -32,7 +32,7 @@ const getKakaoToken = async (authCode: string): Promise<object> => {
     return token;
   } catch (e) {
     if (e.name === "HttpException") throw e;
-    throw new HttpException(401, "카카오 로그인에 실패했습니다.");
+    throw new HttpException(401, "토큰 요청에 실패했습니다.");
   }
 };
 
@@ -56,6 +56,7 @@ const getKakaoIdentity = async (accessToken: string): Promise<object> => {
 export const echoIdentity = async (req: Request, res: Response) => {
   try {
     const authCode: string = req.query.code as string;
+    logger.info(authCode);
     const token = (await getKakaoToken(authCode)) as KakaoToken;
 
     const kakaoIdentity = (await getKakaoIdentity(

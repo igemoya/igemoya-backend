@@ -5,7 +5,7 @@ import { UserTypeValues } from "../../types";
 
 export default createService({
   name: "인증 서비스",
-  baseURL: "/oauth",
+  baseURL: "/auth",
   routes: [
     {
       method: "post",
