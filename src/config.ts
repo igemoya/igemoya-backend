@@ -11,4 +11,5 @@ export default {
   mongoURI: process.env.MONGO_URI!,
   jwtSecret: process.env.JWT_SECRET!,
   logExpires: process.env.LOG_EXPIRES!,
+  kakaoKey: process.env.KAKAO_REST_KEY!,
 };
