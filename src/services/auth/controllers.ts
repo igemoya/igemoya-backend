@@ -23,7 +23,7 @@ const getKakaoToken = async (authCode: string): Promise<any> => {
     return token.data;
   } catch (e) {
     if (e.name === "HttpException") throw e;
-    throw new HttpException(401);
+    throw new HttpException(401, e);
   }
 };
 
