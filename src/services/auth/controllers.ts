@@ -51,6 +51,7 @@ const getKakaoIdentity = async (accessToken: string): Promise<any> => {
 
 export const login = async (req: Request, res: Response) => {
   const authCode: string = req.query.code as string;
+  logger.info(authCode);
   const token = (await getKakaoToken(authCode)) as any;
   const kakaoIdentity = (await getKakaoIdentity(token.access_token)) as any;
   try {
