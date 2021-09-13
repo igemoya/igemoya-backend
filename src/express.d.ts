@@ -1,4 +1,3 @@
-import { RenameLocation } from "typescript";
 import { geoJSON, User } from "./interfaces";
 
 declare global {

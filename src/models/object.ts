@@ -1,11 +1,6 @@
 import { Schema, model } from "mongoose";
 import { ObjectId } from "mongodb";
-import { exhibitionGeoTypeValues } from "../types";
-import {
-  ObjectIdentity,
-  ItemIdentity,
-  ExhibitionIdentity,
-} from "../interfaces";
+import { ObjectIdentity } from "../interfaces";
 
 const objectSchema = new Schema<ObjectIdentity>(
   {

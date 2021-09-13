@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import axios from "axios";
 import { HttpException } from "../../exceptions";
 import { UserModel } from "../../models";
-import { User, UserBase, Account } from "../../interfaces";
+import { User } from "../../interfaces";
 import { issueToken } from "../../resources/token";
 import qs from "qs";
 import config from "../../config";

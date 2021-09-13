@@ -5,7 +5,6 @@ import {
   ExhibitionIdentity,
   ItemIdentity,
   ObjectIdentity,
-  User,
 } from "../../interfaces";
 import { ObjectId } from "mongodb";
 import { HttpStatus } from "../../types";

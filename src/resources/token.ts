@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import { User } from "../interfaces";
 import config from "../config";
 import { HttpException } from "../exceptions";
-import { logger } from "./logger";
 
 export const issueToken = async (
   payload: User,

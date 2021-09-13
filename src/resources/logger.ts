@@ -1,6 +1,5 @@
 import winston from "winston";
 import WinstonDaily from "winston-daily-rotate-file";
-// import { sendTGMessage } from './telegram';
 
 const logDir = "logs";
 const { combine, timestamp, printf } = winston.format;
@@ -49,7 +48,6 @@ if (process.env.NODE_ENV !== undefined) {
 } else {
   logger.on("data", ({ level, message, timestamp: time }) => {
     if (!message.startsWith("[HttpException]") && level < 2) {
-      // sendTGMessage(`[${level}] ${message} (${time})`);
     }
   });
 }

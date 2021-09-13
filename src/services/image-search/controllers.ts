@@ -14,33 +14,6 @@ export const postImage = async (req: Request, res: Response) => {
     meta.location.coordinate[0],
   ];
 
-  // imageMetaModel.updateOne({ _id: imgMeta. }, { location: meta.location });
-  // try {
-  //   const exhibition = (
-  //     await exhibitionModel.aggregate([
-  //       {
-  //         $geoNear: {
-  //           spherical: true,
-  //           maxDistance: 3000,
-  //           near: {
-  //             type: "Point",
-  //             coordinates: [
-  //               meta.location.coordinate[0],
-  //               meta.location.coordinate[1],
-  //             ],
-  //           },
-  //           distanceField: "distance",
-  //           key: "location",
-  //         },
-  //       },
-  //       {
-  //         $limit: 1,
-  //       },
-  //     ])
-  //   )[0];
-  // } catch (e) {
-  //   throw new HttpException(HttpStatus.BadRequest, "전시를 찾지 못했습니다.");
-  // }
   try {
     const items = await itemModel.aggregate([
       {
