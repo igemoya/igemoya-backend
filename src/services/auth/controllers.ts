@@ -10,7 +10,6 @@ import QueryString from "qs";
 
 const getKakaoToken = async (authCode: string): Promise<any> => {
   try {
-    logger.info(authCode);
     const token = await axios({
       //token
       method: "POST",
@@ -38,61 +37,39 @@ const getKakaoIdentity = async (accessToken: string): Promise<any> => {
     const kakaoIdentity = await axios({
       method: "GET",
       url: "https://kapi.kakao.com/v2/user/me",
-      headers: QueryString.stringify({
+      headers: {
         Authorization: `bearer ${accessToken}`,
-      }),
+      },
     });
-    logger.info(kakaoIdentity);
+
     return kakaoIdentity.data;
   } catch (e) {
-    logger.info(e);
     if (e.name === "HttpException") throw e;
     throw new HttpException(401, "카카오 로그인에 실패했습니다.");
   }
 };
 
-export const echoIdentity = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
+  const authCode: string = req.query.code as string;
+  const token = (await getKakaoToken(authCode)) as any;
+  const kakaoIdentity = (await getKakaoIdentity(token.access_token)) as any;
   try {
-    const authCode: string = req.query.code as string;
-    const token = (await getKakaoToken(authCode)) as any;
+    const identity: User = await UserModel.findOne({ idx: kakaoIdentity.id });
+    const me: User = identity
+      ? identity
+      : await (async (): Promise<User> => {
+          const userIdentity = new UserModel({
+            idx: kakaoIdentity.id,
+            username: kakaoIdentity.properties.nickname as string,
+            name: kakaoIdentity.properties.nickname as string,
+            userType: "Audience",
+          });
+          return await userIdentity.save();
+        })();
 
-    // const kakaoIdentity = (await getKakaoIdentity(authCode)) as any;
-
-    return res.json({ token: token });
-  } catch (e) {}
-};
-
-export const identifyUser = async (req: Request, res: Response) => {
-  const account: Account = req.body;
-
-  try {
-    const identity: User = await UserModel.findOne({
-      idx: account.idx,
-    });
-    if (!identity) {
-      throw new Error("HttpException");
-    }
-    return res.json({ token: await issueToken(identity) });
+    return res.json({ me: me, jwt: await issueToken(me) });
   } catch (e) {
     if (e.name === "HttpException") throw e;
-    throw new HttpException(401, "인증에 실패했습니다.");
+    throw new HttpException(401, "로그인 또는 회원가입에 실패했습니다.");
   }
 };
-
-export const registerUser = async (req: Request, res: Response) => {
-  const userInfo: UserBase & Account = req.body;
-
-  try {
-    const userData = new UserModel(userInfo);
-    return res.json({ token: await issueToken(await userData.save()) });
-  } catch (e) {
-    if (e.name === "HttpException") throw e;
-    throw new HttpException(401, "회원가입에 실패했습니다.");
-  }
-};
-function fetch(
-  arg0: string,
-  arg1: { method: string; headers: { "Content-Type": string }; body: string }
-) {
-  throw new Error("Function not implemented.");
-}
