@@ -25,11 +25,7 @@ class App {
   }
   private initializeMiddlewares() {
     this.app.use(express.json());
-    this.app.use(
-      cors({
-        origin: "igemoya-superviser.herokuapp.com",
-      })
-    );
+    this.app.use(cors());
     this.app.use(favicon(path.join(__dirname, "favicon", "favicon.ico")));
     this.app.use(attachIdentity);
     this.app.use(
