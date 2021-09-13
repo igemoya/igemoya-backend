@@ -4,20 +4,16 @@ import { HttpException } from "../../exceptions";
 import { UserModel } from "../../models";
 import { User, UserBase, Account } from "../../interfaces";
 import { issueToken } from "../../resources/token";
+import qs from "qs";
 import config from "../../config";
 import { logger } from "../../resources/logger";
-import QueryString from "qs";
 
 const getKakaoToken = async (authCode: string): Promise<any> => {
   try {
     const token = await axios({
-      //token
       method: "POST",
       url: "https://kauth.kakao.com/oauth/token",
-      headers: {
-        "content-type": "application/x-www-form-urlencoded",
-      },
-      data: QueryString.stringify({
+      data: qs.stringify({
         grant_type: "authorization_code",
         client_id: process.env.KAKAO_REST_KEY,
         redirectUri: "https://igemoya-supervisor.herokuapp.com/oauth",
@@ -26,7 +22,6 @@ const getKakaoToken = async (authCode: string): Promise<any> => {
     });
     return token.data;
   } catch (e) {
-    logger.error(e);
     if (e.name === "HttpException") throw e;
     throw new HttpException(401);
   }
@@ -51,7 +46,6 @@ const getKakaoIdentity = async (accessToken: string): Promise<any> => {
 
 export const login = async (req: Request, res: Response) => {
   const authCode: string = req.query.code as string;
-  logger.info(authCode);
   const token = (await getKakaoToken(authCode)) as any;
   const kakaoIdentity = (await getKakaoIdentity(token.access_token)) as any;
   try {
