@@ -4,7 +4,7 @@ import { attachIdentity } from "../../middlewares";
 
 export default createService({
   name: "exhibitions",
-  baseURL: "/superviser",
+  baseURL: "/supervisor",
   routes: [
     {
       method: "get",
