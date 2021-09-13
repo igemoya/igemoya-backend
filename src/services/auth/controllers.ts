@@ -6,41 +6,43 @@ import { User, UserBase, Account } from "../../interfaces";
 import { issueToken } from "../../resources/token";
 import qs from "qs";
 import config from "../../config";
-import { logger } from "../../resources/logger";
 
-const getKakaoToken = async (authCode: string): Promise<any> => {
+const getKakaoToken = async (authCode: string): Promise<object> => {
+  const data = {
+    grant_type: "authorization_code",
+    client_id: config.kakaoKey,
+    redirectUri: config.kakaoRedirUri,
+    code: authCode as string,
+  };
   try {
     const token = await axios({
       method: "POST",
+      headers: {
+        "content-type": "application/x-www-form-urlencoded;charset=utf-8",
+      },
+      data: qs.stringify(data),
       url: "https://kauth.kakao.com/oauth/token",
-      data: qs.stringify({
-        grant_type: "authorization_code",
-        client_id: process.env.KAKAO_REST_KEY,
-        redirectUri: "https://igemoya-supervisor.herokuapp.com/oauth",
-        code: authCode as string,
-      }),
     });
     return token.data;
   } catch (e) {
     if (e.name === "HttpException") throw e;
-    throw new HttpException(401, e);
+    throw new HttpException(401, "토큰을 가져오는데 실패했습니다.");
   }
 };
 
-const getKakaoIdentity = async (accessToken: string): Promise<any> => {
+const getKakaoIdentity = async (accessToken: string): Promise<object> => {
   try {
     const kakaoIdentity = await axios({
       method: "GET",
-      url: "https://kapi.kakao.com/v2/user/me",
       headers: {
         Authorization: `bearer ${accessToken}`,
       },
+      url: "https://kapi.kakao.com/v2/user/me",
     });
-
     return kakaoIdentity.data;
   } catch (e) {
     if (e.name === "HttpException") throw e;
-    throw new HttpException(401, "카카오 로그인에 실패했습니다.");
+    throw new HttpException(401, "사용자 정보를 불러오는데 실패했습니다.");
   }
 };
 

@@ -12,4 +12,5 @@ export default {
   jwtSecret: process.env.JWT_SECRET!,
   logExpires: process.env.LOG_EXPIRES!,
   kakaoKey: process.env.KAKAO_REST_KEY!,
+  kakaoRedirUri: process.env.KAKAO_REDIR_URI!,
 };
