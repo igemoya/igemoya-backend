@@ -4,7 +4,7 @@ import { UserType } from "../types";
 export interface UserBase {
   idx: string;
   username: string;
-  name: string;
+  profile_image: string;
   userType: UserType;
 }
 
