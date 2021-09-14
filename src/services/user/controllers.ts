@@ -4,7 +4,7 @@ import { veriToken } from "../../resources/token";
 
 export const userInfo = async (req: Request, res: Response) => {
   try {
-    const identity = await veriToken(req.token);
+    const identity = req.user;
 
     return res.json({
       username: identity.username,
