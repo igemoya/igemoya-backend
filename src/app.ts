@@ -15,8 +15,8 @@ class App {
   constructor() {
     this.app = express();
     this.connectMongoDB();
-    this.initializeMiddlewares();
     this.initializeMorgan();
+    this.initializeMiddlewares();
     this.initializeRouter();
   }
   private initializeRouter() {
@@ -24,16 +24,15 @@ class App {
     this.app.use("/docs", serviceDocsRouter);
   }
   private initializeMiddlewares() {
-    this.app.use(express.json());
-    this.app.use(cors());
-    this.app.use(favicon(path.join(__dirname, "favicon", "favicon.ico")));
-    this.app.use(attachIdentity);
     this.app.use(
       bearerToken({
         headerKey: "Bearer",
         reqKey: "token",
       })
     );
+    this.app.use(express.json());
+    this.app.use(cors());
+    this.app.use(favicon(path.join(__dirname, "favicon", "favicon.ico")));
   }
   private connectMongoDB() {
     const { mongoURI } = config;
