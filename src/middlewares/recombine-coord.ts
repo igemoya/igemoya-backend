@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { readBuilderProgram } from "typescript";
 import { geoJSON } from "../interfaces";
 
 const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
@@ -20,6 +21,12 @@ const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
       },
     };
     req.geoJSON = geojson;
+
+    const body = req.body;
+    delete body.location;
+    delete body.maxDistance;
+    req.body = body;
+
     return next();
   }
 
@@ -35,10 +42,14 @@ const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
     },
     maxDistance: req.body.location.maxDistance
       ? req.body.location.maxDistance
-      : 500,
+      : (500 as number),
   };
 
   req.geoJSON = geojson;
+  const body = req.body;
+  delete body.location;
+  delete body.maxDistance;
+  req.body = body;
 
   return next();
 };

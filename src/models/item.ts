@@ -14,6 +14,7 @@ const itemSchema = new Schema<ItemIdentity>(
       coordinate: { type: Array, required: true },
       type: { type: String, enum: exhibitionGeoTypeValues },
     },
+    maxDistance: { type: Number, required: true },
   },
   { timestamps: true }
 );

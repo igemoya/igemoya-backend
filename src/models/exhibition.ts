@@ -4,7 +4,7 @@ import { exhibitionGeoTypeValues } from "../types";
 import { ExhibitionIdentity } from "../interfaces";
 
 const exhibitionSchema = new Schema<ExhibitionIdentity>({
-  createdUser: { type: ObjectId, ref: "User" },
+  createdUser: { type: ObjectId, ref: "User", required: true },
   name: { type: String, required: true },
   description: { type: String, required: true },
   images: { type: Array, required: true },
@@ -12,6 +12,7 @@ const exhibitionSchema = new Schema<ExhibitionIdentity>({
     coordinate: { type: Array, required: true },
     type: { type: String, enum: exhibitionGeoTypeValues },
   },
+  maxDistance: { type: Number, required: true },
 });
 
 const exhibitionModel = model<ExhibitionIdentity>(

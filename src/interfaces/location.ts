@@ -5,5 +5,5 @@ export interface geoJSON {
     type: exhibitionGeoType;
     coordinate: coordinate | Number[][]; //Poligon or Point
   };
-  maxDistance?: Number;
+  maxDistance?: number;
 }
