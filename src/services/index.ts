@@ -60,8 +60,8 @@ const createRouter = (services: Service[]) => {
       router[route.method](
         pathJoin(service.baseURL, route.path),
         ...(route.middlewares ? route.middlewares.map(wrapper) : []),
-        wrapper(recombineCoord),
         wrapper(checkPermissions(service.code, route)),
+        wrapper(recombineCoord),
         ...(route.validateSchema
           ? [validator(Joi.object(route.validateSchema))]
           : []),
