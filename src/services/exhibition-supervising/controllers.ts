@@ -8,11 +8,15 @@ import {
 } from "../../interfaces";
 import { ObjectId } from "mongodb";
 import { HttpStatus } from "../../types";
+import imageSearch from "../image-search";
 
 export const registerExhibition = async (req: Request, res: Response) => {
   try {
-    const exhibition: ExhibitionIdentity = req.body;
-    exhibition.createdUser = req.user._id;
+    const exhibition: ExhibitionIdentity = {
+      createdUser: req.user._id,
+      ...req.body,
+      ...req.geoJSON,
+    };
     const newExhibition = new exhibitionModel(exhibition);
     await newExhibition.save();
     return res.sendStatus(HttpStatus.Created);
@@ -24,7 +28,11 @@ export const registerExhibition = async (req: Request, res: Response) => {
 
 export const registerItems = async (req: Request, res: Response) => {
   try {
-    const item: ItemIdentity = req.body;
+    const item: ItemIdentity = {
+      createdUser: req.user._id,
+      ...req.body,
+      ...req.geoJSON,
+    };
     const exhibition = await exhibitionModel.findOne({
       _id: req.body.exhibitionId,
     });
@@ -35,7 +43,6 @@ export const registerItems = async (req: Request, res: Response) => {
         "해당 전시를 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    item.createdUser = exhibition.createdUser;
     new itemModel(item).save();
     res.sendStatus(HttpStatus.Created);
   } catch (e) {
@@ -46,7 +53,10 @@ export const registerItems = async (req: Request, res: Response) => {
 
 export const registerObjects = async (req: Request, res: Response) => {
   try {
-    const object: ObjectIdentity = req.body;
+    const object: ObjectIdentity = {
+      createdUser: req.user._id,
+      ...req.body,
+    };
     const item = await itemModel.findOne({
       _id: req.body.itemId,
     });
@@ -57,7 +67,6 @@ export const registerObjects = async (req: Request, res: Response) => {
         "해당 전시를 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    object.createdUser = req.user._id;
     new objectModel(object).save();
     res.sendStatus(HttpStatus.Created);
   } catch (e) {
