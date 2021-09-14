@@ -58,7 +58,8 @@ export const login = async (req: Request, res: Response) => {
           const userIdentity = new UserModel({
             idx: kakaoIdentity.id,
             username: kakaoIdentity.properties.nickname as string,
-            name: kakaoIdentity.properties.nickname as string,
+            profile_image: kakaoIdentity.kakao_account.profile
+              .profile_image_url as string,
             userType: "Audience",
           });
           return await userIdentity.save();
