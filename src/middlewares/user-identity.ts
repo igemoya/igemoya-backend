@@ -8,15 +8,14 @@ const attachIdentity = async (
 ) => {
   if (!req.token) {
     return next();
-  } else {
-    const token = req.token;
-    try {
-      const identity = await veriToken(token);
-      req.user = identity;
-      next();
-    } catch (e) {
-      return next(e);
-    }
+  }
+  const token = req.token;
+  try {
+    const identity = await veriToken(token);
+    req.user = identity;
+    next();
+  } catch (e) {
+    return next(e);
   }
 };
 

@@ -7,7 +7,7 @@ export default async (
   limit: number,
   maxDis: number
 ): Promise<any[]> => {
-  const documents = await itemModel.aggregate([
+  const documents = await model.aggregate([
     {
       $geoNear: {
         spherical: true,

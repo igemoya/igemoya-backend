@@ -9,7 +9,12 @@ import {
 } from "express";
 import { join as pathJoin } from "path";
 import { HTTPMethod } from "../types";
-import { checkPermissions, validator, recombineCoord } from "../middlewares";
+import {
+  checkPermissions,
+  validator,
+  recombineCoord,
+  attachIdentity,
+} from "../middlewares";
 
 interface KeyValue<T> {
   [key: string]: T;
@@ -59,9 +64,10 @@ const createRouter = (services: Service[]) => {
     service.routes.forEach((route) => {
       router[route.method](
         pathJoin(service.baseURL, route.path),
-        ...(route.middlewares ? route.middlewares.map(wrapper) : []),
+        wrapper(attachIdentity),
         wrapper(checkPermissions(service.code, route)),
         wrapper(recombineCoord),
+        ...(route.middlewares ? route.middlewares.map(wrapper) : []),
         ...(route.validateSchema
           ? [validator(Joi.object(route.validateSchema))]
           : []),
