@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { logger } from "../resources/logger";
 import { veriToken } from "../resources/token";
 
 const attachIdentity = async (
@@ -8,14 +9,15 @@ const attachIdentity = async (
 ) => {
   if (!req.token) {
     return next();
-  }
-  const { token } = req;
-  try {
-    const identity = await veriToken(token);
-    req.user = identity;
-    next();
-  } catch (e) {
-    return next(e);
+  } else {
+    const token = req.token;
+    try {
+      const identity = await veriToken(token);
+      req.user = identity;
+      next();
+    } catch (e) {
+      return next(e);
+    }
   }
 };
 

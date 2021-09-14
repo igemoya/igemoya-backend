@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { geoJSON } from "../interfaces";
-import { logger } from "../resources/logger";
 
 const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
   if (!req.body.location) {
@@ -40,8 +39,6 @@ const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
   };
 
   req.geoJSON = geojson;
-
-  logger.info(req.geoJSON);
 
   return next();
 };

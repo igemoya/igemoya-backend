@@ -11,7 +11,7 @@ export default async (
     {
       $geoNear: {
         spherical: true,
-        maxDistance: 3000,
+        maxDistance: maxDis,
         near: {
           type: "Point",
           coordinates: [coordinate[1], coordinate[0]],
@@ -21,7 +21,7 @@ export default async (
       },
     },
     {
-      $limit: 1,
+      $limit: limit,
     },
   ]);
   return documents;
