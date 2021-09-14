@@ -9,7 +9,6 @@ import config from "./config";
 import { httpLogStream, logger } from "./resources/logger";
 import { serviceDocsRouter, serviceRouter } from "./services";
 import { attachIdentity } from "./middlewares";
-import axios from "axios";
 
 class App {
   public app: express.Application;
@@ -19,7 +18,6 @@ class App {
     this.initializeMiddlewares();
     this.initializeMorgan();
     this.initializeRouter();
-    this.wakeFront();
   }
   private initializeRouter() {
     this.app.use("/", serviceRouter);
@@ -56,13 +54,6 @@ class App {
       :referrer :user-agent :response-time ms`;
 
     this.app.use(morgan(morganFormat, { stream: httpLogStream }));
-  }
-
-  private wakeFront() {
-    setInterval(
-      () => axios.get("https://igemoya-supervisor.herokuapp.com"),
-      1200000
-    );
   }
 }
 export default App;
