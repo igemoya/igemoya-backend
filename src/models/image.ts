@@ -8,7 +8,11 @@ const imageMetaSchema = new Schema<ImgIdentity>({
   uploader: { type: ObjectId, required: true, ref: "User" },
   filename: { type: String, required: true },
   location: {
-    coordinate: { type: Array, required: true },
+    coordinates: {
+      type: [Number],
+      required: true,
+      index: "2dsphere",
+    },
     type: { type: String, enum: exhibitionGeoTypeValues },
   },
   createdAt: {

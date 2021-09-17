@@ -9,8 +9,15 @@ const exhibitionSchema = new Schema<ExhibitionIdentity>({
   description: { type: String, required: true },
   images: { type: Array, required: true },
   location: {
-    coordinate: { type: Array, required: true },
-    type: { type: String, enum: exhibitionGeoTypeValues },
+    type: {
+      type: String,
+      enum: exhibitionGeoTypeValues,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      index: "2dsphere",
+    },
   },
   maxDistance: { type: Number, required: true },
 });
@@ -19,4 +26,5 @@ const exhibitionModel = model<ExhibitionIdentity>(
   "Exhibitions",
   exhibitionSchema
 );
+
 export { exhibitionSchema, exhibitionModel };

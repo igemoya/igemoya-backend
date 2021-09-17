@@ -1,9 +1,9 @@
-import { exhibitionGeoType, coordinate } from "../types";
+import { exhibitionGeoType, coordinates } from "../types";
 
 export interface geoJSON {
   location: {
     type: exhibitionGeoType;
-    coordinate: coordinate | Number[][]; //Poligon or Point
+    coordinates: Array<number>; //Poligon or Point
   };
   maxDistance?: number;
 }
