@@ -1,12 +1,12 @@
 import { ObjectId } from "mongodb";
-import { coordinate, exhibitionGeoType } from "../types";
+import { coordinates, exhibitionGeoType } from "../types";
 
 export interface imgMeta {
   //API server로 들어오는 데이터
   imgToken: string;
   location: {
     type: exhibitionGeoType;
-    coordinate: coordinate;
+    coordinates: coordinates;
   };
 }
 
@@ -22,7 +22,7 @@ export interface ImgIdentity {
   filename: string;
   location?: {
     type: exhibitionGeoType;
-    coordinate: coordinate;
+    coordinates: coordinates;
   };
   createdAt?: Date;
 }

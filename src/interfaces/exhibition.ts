@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { coordinate, exhibitionGeoType } from "../types";
+import { coordinates, exhibitionGeoType } from "../types";
 
 export interface ObjectIdentity {
   exhibitionId?: ObjectId;
@@ -17,7 +17,7 @@ export interface ItemIdentity {
   images: string[];
   location: {
     type: exhibitionGeoType;
-    coordinate: coordinate;
+    coordinates: coordinates;
   };
   maxDistance: number;
 }
@@ -28,7 +28,7 @@ export interface ExhibitionIdentity {
   images: string[];
   location: {
     type: exhibitionGeoType;
-    coordinate: coordinate;
+    coordinates: coordinates;
   };
   maxDistance: number;
 }

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { readBuilderProgram } from "typescript";
+import { logger } from "../resources/logger";
 import { geoJSON } from "../interfaces";
+import { coordinates } from "../types";
 
 const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
   if (!req.body.location) {
@@ -8,7 +9,7 @@ const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
     return next();
   } else if (!(req.body.location.type == "Point")) {
     //body.location의 type이 Poligon일 경우 좌표 swap 후 옮김
-    const coordinates = req.body.location.coordinate;
+    const coordinates = req.body.location.coordinates;
 
     for (let i = 0; i < coordinates.length; i++) {
       coordinates[i] = [coordinates[i][1], coordinates[i][0]];
@@ -17,7 +18,7 @@ const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
     const geojson: geoJSON = {
       location: {
         type: "Polygon",
-        coordinate: coordinates,
+        coordinates: coordinates,
       },
     };
     req.geoJSON = geojson;
@@ -35,10 +36,10 @@ const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
   const geojson: geoJSON = {
     location: {
       type: "Point",
-      coordinate: [
-        req.body.location?.coordinate[1],
-        req.body.location?.coordinate[0],
-      ],
+      coordinates: [
+        parseFloat(req.body.location?.coordinates[1]),
+        parseFloat(req.body.location?.coordinates[0]),
+      ] as coordinates,
     },
     maxDistance: req.body.location.maxDistance
       ? req.body.location.maxDistance

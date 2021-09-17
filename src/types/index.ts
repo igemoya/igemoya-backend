@@ -6,7 +6,7 @@ export type UserType = typeof UserTypeValues[number];
 export const exhibitionGeoTypeValues = ["Point", "Polygon"] as const;
 export type exhibitionGeoType = typeof exhibitionGeoTypeValues[number];
 
-export type coordinate = [number, number];
+export type coordinates = [number, number];
 
 export enum HttpStatus {
   Continue = 100,
