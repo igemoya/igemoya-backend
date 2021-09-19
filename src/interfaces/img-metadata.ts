@@ -2,18 +2,13 @@ import { ObjectId } from "mongodb";
 import { coordinates, exhibitionGeoType } from "../types";
 
 export interface imgMeta {
-  //API server로 들어오는 데이터
-  imgToken: string;
+  //Client에서 들어오는 데이터
+  imgId: ObjectId;
+  imgLocation: string;
   location: {
     type: exhibitionGeoType;
     coordinates: coordinates;
   };
-}
-
-export interface imgserverMeta {
-  //imgToken Payload
-  imgId: ObjectId;
-  filename: string;
 }
 
 export interface ImgIdentity {
