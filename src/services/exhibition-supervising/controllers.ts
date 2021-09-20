@@ -8,7 +8,7 @@ import {
 } from "../../interfaces";
 import { ObjectId } from "mongodb";
 import { HttpStatus } from "../../types";
-import imageSearch from "../image-search";
+import { logger } from "../../resources/logger";
 
 export const registerExhibition = async (req: Request, res: Response) => {
   try {
@@ -161,16 +161,10 @@ export const getAllExhibitions = async (req: Request, res: Response) => {
 
 export const getAllItems = async (req: Request, res: Response) => {
   try {
-    const items: ItemIdentity[] = await itemModel.aggregate([
-      {
-        $match: {
-          $and: [
-            { createdUser: new ObjectId(req.user._id) },
-            { exhibitionId: new ObjectId(req.params.id) },
-          ],
-        },
-      },
-    ]);
+    const items: ItemIdentity[] = await itemModel.find({
+      createdUser: new ObjectId(req.user._id),
+      exhibitionId: new ObjectId(req.params.id),
+    });
     return res.json({ items: items });
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -183,16 +177,10 @@ export const getAllItems = async (req: Request, res: Response) => {
 
 export const getAllObjects = async (req: Request, res: Response) => {
   try {
-    const objects: ObjectIdentity[] = await objectModel.aggregate([
-      {
-        $match: {
-          $and: [
-            { createdUser: new ObjectId(req.user._id) },
-            { itemId: new ObjectId(req.params.id) },
-          ],
-        },
-      },
-    ]);
+    const objects: ObjectIdentity[] = await objectModel.find({
+      createdUser: new ObjectId(req.user._id),
+      itemId: new ObjectId(req.params.id),
+    });
     return res.json({ objects: objects });
   } catch (e) {
     if (e.name === "HttpException") throw e;
