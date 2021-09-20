@@ -1,4 +1,4 @@
-import { exhibitionGeoType, coordinates } from "../types";
+import { exhibitionGeoType } from "../types";
 
 export interface geoJSON {
   location: {

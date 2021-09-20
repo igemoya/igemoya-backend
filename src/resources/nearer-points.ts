@@ -1,28 +1,23 @@
-import { coordinate } from "../types";
-import { itemModel } from "../models";
+import { coordinates } from "../types";
 
 export default async (
   model: any,
-  coordinate: coordinate,
+  coordinates: coordinates,
   limit: number,
-  maxDis: number
+  options?: object
 ): Promise<any[]> => {
   const documents = await model.aggregate([
     {
       $geoNear: {
-        spherical: true,
-        maxDistance: maxDis,
         near: {
           type: "Point",
-          coordinates: [coordinate[1], coordinate[0]],
+          coordinates: coordinates,
         },
-        distanceField: "distance",
-        key: "location",
+        distanceField: "dist.calculated",
+        ...options,
       },
     },
-    {
-      $limit: limit,
-    },
+    { $limit: limit },
   ]);
   return documents;
 };
