@@ -1,14 +1,11 @@
 import { ObjectId } from "mongodb";
-import { coordinates, exhibitionGeoType } from "../types";
+import { geoJSON } from "./location";
+import { exhibitionGeoType } from "../types";
 
-export interface imgMeta {
+export interface imgMeta extends geoJSON {
   //Client에서 들어오는 데이터
   imgId: ObjectId;
   imgLocation: string;
-  location: {
-    type: exhibitionGeoType;
-    coordinates: coordinates;
-  };
 }
 
 export interface ImgIdentity {
@@ -17,7 +14,6 @@ export interface ImgIdentity {
   filename: string;
   location?: {
     type: exhibitionGeoType;
-    coordinates: coordinates;
+    coordinates: Array<number>;
   };
-  createdAt?: Date;
 }
