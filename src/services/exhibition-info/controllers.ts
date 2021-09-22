@@ -1,3 +1,4 @@
+import { ObjectId } from "bson";
 import { Request, Response } from "express";
 import { HttpException } from "../../exceptions";
 import { exhibitionModel, itemModel, objectModel } from "../../models";
@@ -5,7 +6,9 @@ import { HttpStatus } from "../../types";
 
 export const getExhibition = async (req: Request, res: Response) => {
   try {
-    const exhibition = await exhibitionModel.findById(req.params.id);
+    const exhibition = await exhibitionModel.findById(
+      new ObjectId(req.params.id)
+    );
     return res.json({ exhibition: exhibition });
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -15,7 +18,7 @@ export const getExhibition = async (req: Request, res: Response) => {
 
 export const getItem = async (req: Request, res: Response) => {
   try {
-    const item = await itemModel.findById(req.params.id);
+    const item = await itemModel.findById(new ObjectId(req.params.id));
     return res.json({ item: item });
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -28,7 +31,7 @@ export const getItem = async (req: Request, res: Response) => {
 
 export const getObject = async (req: Request, res: Response) => {
   try {
-    const object = await objectModel.findById(req.params.id);
+    const object = await objectModel.findById(new ObjectId(req.params.id));
     return res.json({ object: object });
   } catch (e) {
     if (e.name === "HttpException") throw e;
