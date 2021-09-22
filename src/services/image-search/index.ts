@@ -12,5 +12,12 @@ export default createService({
       needAuth: false,
       needPermission: false,
     },
+    {
+      method: "post",
+      path: "/image-search",
+      handler: controllers.postImage,
+      needAuth: true,
+      needPermission: false,
+    },
   ],
 });

@@ -37,8 +37,8 @@ const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
     location: {
       type: "Point",
       coordinates: [
-        parseFloat(req.body.location?.coordinates[1]),
-        parseFloat(req.body.location?.coordinates[0]),
+        parseFloat(req.body.location?.coordinates[1].toFixed(8)),
+        parseFloat(req.body.location?.coordinates[0].toFixed(8)),
       ] as coordinates,
     },
     maxDistance: req.body.location.maxDistance

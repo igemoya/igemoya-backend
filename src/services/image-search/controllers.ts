@@ -5,6 +5,7 @@ import { HttpException } from "../../exceptions";
 import { coordinates, HttpStatus } from "../../types";
 import nearerPoints from "../../resources/nearer-points";
 import { ObjectId } from "mongodb";
+import { maxHeaderSize } from "http";
 
 export const postImage = async (req: Request, res: Response) => {
   try {
@@ -16,8 +17,16 @@ export const postImage = async (req: Request, res: Response) => {
     const points = await nearerPoints(
       itemModel,
       req.geoJSON.location.coordinates as coordinates,
-      3
+      1
     );
+
+    for (let i = 0; i < points.length; i++) {
+      if (points[i].maxDistance < points[i].dist.calculated) {
+        points.splice(i, 1);
+      }
+    }
+
+    return res.json({ result: points });
   } catch (e) {
     throw new HttpException(HttpStatus.BadRequest, "아이템을 찾지 못했습니다.");
   }
