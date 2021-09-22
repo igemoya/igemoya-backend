@@ -8,7 +8,6 @@ import {
 } from "../../interfaces";
 import { ObjectId } from "mongodb";
 import { HttpStatus } from "../../types";
-import { logger } from "../../resources/logger";
 
 export const registerExhibition = async (req: Request, res: Response) => {
   try {
