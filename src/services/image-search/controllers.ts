@@ -26,7 +26,7 @@ export const postImage = async (req: Request, res: Response) => {
       }
     }
 
-    return res.json({ result: points });
+    return res.json({ result: points[0] });
   } catch (e) {
     throw new HttpException(HttpStatus.BadRequest, "아이템을 찾지 못했습니다.");
   }
