@@ -7,7 +7,7 @@ export default async (
   limit: number = 10000,
   options?: object
 ): Promise<any[]> => {
-  const points = await model.aggregate([
+  const documents = await model.aggregate([
     {
       $geoNear: {
         near: {
@@ -20,11 +20,9 @@ export default async (
     },
     { $limit: limit },
   ]);
-
-  for (let i = 0; i < points.length; i++) {
-    if (points[i].maxDistance < points[i].dist.calculated) {
-      points.splice(i, 1);
-    }
-  }
+  let points: Array<any> = [];
+  documents.forEach((e: any) => {
+    if (e.maxDistance > e.dist.calculated) points.push(e);
+  });
   return points;
 };
