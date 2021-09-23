@@ -58,7 +58,7 @@ export const deleteTheme = async (req: Request, res: Response) => {
     res.sendStatus(HttpStatus.OK);
   } catch (e) {
     if (e.name === "HttpException") throw e;
-    throw new HttpException(HttpStatus.BadRequest, "테마 수정에 실패했습니다.");
+    throw new HttpException(HttpStatus.BadRequest, "테마 삭제에 실패했습니다.");
   }
 };
 
@@ -92,6 +92,7 @@ export const nearerTheme = async (req: Request, res: Response) => {
     );
     return res.json({ themes: points });
   } catch (e) {
+    throw e;
     if (e.name === "HttpException") throw e;
     throw new HttpException(HttpStatus.BadRequest, "테마 조회에 실패했습니다.");
   }
