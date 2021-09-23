@@ -53,21 +53,21 @@ export default createService({
     //3Depth PUT
     {
       method: "put",
-      path: "/exhibition",
+      path: "/exhibition/:id",
       handler: controllers.updateExhibition,
       needAuth: true,
       needPermission: true,
     },
     {
       method: "put",
-      path: "/item",
+      path: "/item/:id",
       handler: controllers.updateItem,
       needAuth: true,
       needPermission: true,
     },
     {
       method: "put",
-      path: "/object",
+      path: "/object/:id",
       handler: controllers.updateObject,
       needAuth: true,
       needPermission: true,

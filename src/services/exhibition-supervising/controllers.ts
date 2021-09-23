@@ -80,7 +80,7 @@ export const registerObjects = async (req: Request, res: Response) => {
 export const updateExhibition = async (req: Request, res: Response) => {
   try {
     const exhibition = await exhibitionModel.findOne({
-      _id: req.body.exhibitionId,
+      _id: req.params.id,
     });
     if (exhibition.createdUser != req.user._id) {
       //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
@@ -90,8 +90,8 @@ export const updateExhibition = async (req: Request, res: Response) => {
       );
     }
     await exhibitionModel.updateOne(
-      { _id: req.body.exhibitionId },
-      req.body.exhibition
+      { _id: req.params.id },
+      { ...req.body.exhibition, ...req.geoJSON } // ? req.geoJSON : undefined) }
     );
     res.sendStatus(HttpStatus.OK);
   } catch (e) {
@@ -103,7 +103,7 @@ export const updateExhibition = async (req: Request, res: Response) => {
 export const updateItem = async (req: Request, res: Response) => {
   try {
     const item = await itemModel.findOne({
-      _id: req.body.exhibitionId,
+      _id: req.params.id,
     });
     if (item.createdUser != req.user._id) {
       //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
@@ -112,7 +112,10 @@ export const updateItem = async (req: Request, res: Response) => {
         "해당 아이템을 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    await itemModel.updateOne({ _id: req.body.itemId }, req.body.item);
+    await itemModel.updateOne(
+      { _id: req.params.id },
+      { ...req.body.item, ...req.geoJSON }
+    );
     res.sendStatus(HttpStatus.OK);
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -126,7 +129,7 @@ export const updateItem = async (req: Request, res: Response) => {
 export const updateObject = async (req: Request, res: Response) => {
   try {
     const item = await objectModel.findOne({
-      _id: req.body.objectId,
+      _id: req.params.id,
     });
     if (item.createdUser != req.user._id) {
       //전시를 등록한 사용자와 현재 접근하는 사용자가 같은지 검증
@@ -135,7 +138,7 @@ export const updateObject = async (req: Request, res: Response) => {
         "해당 오브젝트를 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-    await objectModel.updateOne({ _id: req.body.objectId }, req.body.object);
+    await objectModel.updateOne({ _id: req.params.id }, req.body.object);
     res.sendStatus(HttpStatus.OK);
   } catch (e) {
     if (e.name === "HttpException") throw e;
@@ -202,7 +205,7 @@ export const deleteExhibition = async (req: Request, res: Response) => {
         "해당 전시를 수정하기 위해 필요한 권한이 없습니다."
       );
     }
-
+    await exhibitionModel.deleteOne({ _id: req.params.id });
     res.sendStatus(HttpStatus.OK);
   } catch (e) {
     if (e.name === "HttpException") throw e;
