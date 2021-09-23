@@ -25,7 +25,6 @@ const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
 
     const body = req.body;
     delete body.location;
-    delete body.maxDistance;
     req.body = body;
 
     return next();
@@ -49,7 +48,6 @@ const recombineCoord = (req: Request, res: Response, next: NextFunction) => {
   req.geoJSON = geojson;
   const body = req.body;
   delete body.location;
-  delete body.maxDistance;
   req.body = body;
 
   return next();

@@ -1,12 +1,13 @@
 import { coordinates } from "../types";
+import { logger } from "./logger";
 
 export default async (
   model: any,
   coordinates: coordinates,
-  limit: number,
+  limit: number = 10000,
   options?: object
 ): Promise<any[]> => {
-  const documents = await model.aggregate([
+  const points = await model.aggregate([
     {
       $geoNear: {
         near: {
@@ -19,5 +20,11 @@ export default async (
     },
     { $limit: limit },
   ]);
-  return documents;
+
+  for (let i = 0; i < points.length; i++) {
+    if (points[i].maxDistance < points[i].dist.calculated) {
+      points.splice(i, 1);
+    }
+  }
+  return points;
 };
