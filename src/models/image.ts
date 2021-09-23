@@ -6,7 +6,7 @@ import config from "../config";
 
 const imageMetaSchema = new Schema<ImgIdentity>({
   uploader: { type: ObjectId, required: true, ref: "User" },
-  filename: { type: String, required: true },
+  model: { type: String, required: true },
   location: {
     coordinates: {
       type: [Number],
